@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>!anvum - onva Language Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="https://rits1019c1.github.io/onva/byam.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Noto+Sans+JP:wght@300;400;700&family=JetBrains+Mono&display=swap');
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: #ffffff;
+            color: #1e293b;
+        }
+        .byam-card {
+            background: #ffffff;
+            border: 1px solid #f1f5f9;
+            transition: all 0.2s ease;
+        }
+        .byam-card:hover {
+            border-color: #3b82f6;
+            background: #f8faff;
+        }
+        .vocab-item {
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .vocab-item:last-child {
+            border-bottom: none;
+        }
+        /* Converter Preview Style */
+        #convert-preview {
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            background: white;
+            padding: 2rem;
+            border-radius: 1.5rem;
+        }
+    </style>
+</head>
+<body class="bg-slate-50/50">
+
+    <nav class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-lg border-b border-slate-100">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <span class="onva text-2xl font-bold text-slate-900">onva</span>
+            </div>
+            <div class="flex gap-8 text-[11px] font-bold tracking-widest text-slate-500 uppercase">
+                <a href="index.html" class="hover:text-slate-900 transition">Kingdom</a>
+                <a href="anvum.html" class="text-blue-600 border-b-2 border-blue-600 pb-1">!Anvum</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-24 px-6 max-w-6xl mx-auto">
+        <header class="mb-20">
+            <h1 class="text-5xl font-bold text-slate-900 mb-6 tracking-tighter">!anvum</h1>
+            <p class="text-xl text-slate-500 max-w-3xl leading-relaxed">
+                onva語（!anvum）は、18の音素による「言語の最適化」を目的としています。
+            </p>
+        </header>
+
+        <!-- 18 Characters Grid -->
+        <section class="mb-32">
+            <h2 class="text-2xl font-bold mb-10 flex items-center gap-3">
+                <span class="w-2 h-8 bg-slate-900 rounded-full"></span>
+                The 18 byam (Alphabet)
+            </h2>
+            <div class="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-9 gap-4" id="alphabet-grid"></div>
+        </section>
+
+        <!-- Dictionary Section -->
+        <section class="mb-32">
+            <h2 class="text-2xl font-bold mb-10 flex items-center gap-3">
+                <span class="w-2 h-8 bg-blue-500 rounded-full"></span>
+                Dictionary (単語集)
+            </h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-3xl p-8 border border-slate-100">
+                    <h3 class="text-blue-500 font-black text-xs uppercase tracking-widest mb-6">Basics</h3>
+                    <div class="space-y-4" id="vocab-basics"></div>
+                </div>
+                <div class="bg-white rounded-3xl p-8 border border-slate-100">
+                    <h3 class="text-blue-500 font-black text-xs uppercase tracking-widest mb-6">Concepts</h3>
+                    <div class="space-y-4" id="vocab-concepts"></div>
+                </div>
+                <div class="bg-white rounded-3xl p-8 border border-slate-100">
+                    <h3 class="text-blue-500 font-black text-xs uppercase tracking-widest mb-6">Verbs</h3>
+                    <div class="space-y-4" id="vocab-verbs"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- byam Converter Tool -->
+        <section class="mb-32">
+            <h2 class="text-2xl font-bold mb-10 flex items-center gap-3">
+                <span class="w-2 h-8 bg-purple-500 rounded-full"></span>
+                byam Converter (変換・保存ツール)
+            </h2>
+            <div class="bg-slate-900 rounded-[3rem] p-8 md:p-12 text-white shadow-2xl">
+                <div class="max-w-2xl mx-auto space-y-8">
+                    <div class="space-y-4">
+                        <label class="block text-xs font-black uppercase tracking-widest text-slate-400">Input Text (Alphabet)</label>
+                        <input type="text" id="converter-input" placeholder="sye wor..." 
+                            class="w-full bg-slate-800 border-none rounded-2xl px-6 py-4 text-2xl font-bold text-white focus:ring-2 focus:ring-purple-500 outline-none">
+                        
+                        <div class="flex items-center gap-6 pt-2">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" id="show-ruby" class="w-5 h-5 rounded border-none bg-slate-700 checked:bg-purple-500 transition cursor-pointer">
+                                <span class="text-sm font-bold text-slate-400 group-hover:text-white transition">ふりがなを表示</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <label class="block text-xs font-black uppercase tracking-widest text-slate-400">Preview</label>
+                        <div id="convert-preview" class="text-slate-900 border-4 border-dashed border-slate-800">
+                            <!-- Generated byam icons go here -->
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center pt-4">
+                        <button id="download-btn" class="px-10 py-4 bg-purple-600 hover:bg-purple-500 text-white rounded-full font-bold shadow-lg shadow-purple-900/20 transition-all flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            PNGとして保存
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Hidden canvas for rendering -->
+            <canvas id="export-canvas" style="display:none;"></canvas>
+        </section>
+
+    </main>
+
+    <footer class="py-20 text-center">
+        <p class="text-slate-300 text-[10px] font-black tracking-[0.4em] uppercase">onva Royal Linguistic Institute</p>
+    </footer>
+
+    <script>
+        const byams = [
+            {k: "!a", l: "ア゛"}, {k: "e", l: "エ"}, {k: "vu", l: "ヴ"}, {k: "wo", l: "ヲ"},
+            {k: "i", l: "イ"}, {k: "yu", l: "ユ"}, {k: "r", l: "R"}, {k: "b", l: "B"},
+            {k: "g", l: "G"}, {k: "p", l: "P"}, {k: "bya", l: "ビャ"}, {k: "m", l: "M"},
+            {k: "n", l: "ン"}, {k: "z", l: "Z"}, {k: "sye", l: "シェ"}, {k: "ge", l: "ゲ"},
+            {k: "t", l: "T"}, {k: "h", l: "H"}
+        ];
+
+        const vocabulary = {
+            basics: [{k: "sye", m: "私"}, {k: "yu", m: "あなた"}, {k: "on", m: "人"}, {k: "ge", m: "食べ物"}, {k: "m", m: "水"}],
+            concepts: [{k: "an", m: "知恵"}, {k: "onva", m: "国/中心"}, {k: "ritt", m: "計算/AI"}, {k: "b-e", m: "美"}],
+            verbs: [{k: "wor", m: "寝る"}, {k: "i", m: "食べる"}, {k: "h", m: "持つ"}, {k: "n-e", m: "見る"}]
+        };
+
+        const grid = document.getElementById('alphabet-grid');
+        byams.forEach(b => {
+            const el = document.createElement('div');
+            el.className = 'byam-card p-6 rounded-2xl flex flex-col items-center justify-center';
+            el.innerHTML = `<div class="onva text-3xl mb-4 text-slate-900">${b.k}</div><div class="text-[10px] font-bold text-slate-400 mb-1">${b.l}</div><div class="font-mono text-[9px] text-blue-500">${b.k}</div>`;
+            grid.appendChild(el);
+        });
+
+        const renderVocab = (id, data) => {
+            const container = document.getElementById(id);
+            data.forEach(v => {
+                const el = document.createElement('div');
+                el.className = 'vocab-item py-3 flex justify-between items-center';
+                el.innerHTML = `<div><div class="onva text-xl text-slate-900">${v.k}</div><div class="text-[9px] font-mono text-slate-400 uppercase">${v.k}</div></div><div class="text-sm font-bold text-slate-500">${v.m}</div>`;
+                container.appendChild(el);
+            });
+            
+    if (typeof window.renderOnva === 'function') {
+        window.renderOnva();
+    }
+        };
+
+        renderVocab('vocab-basics', vocabulary.basics);
+        renderVocab('vocab-concepts', vocabulary.concepts);
+        renderVocab('vocab-verbs', vocabulary.verbs);
+
+        // --- Converter Logic ---
+        const input = document.getElementById('converter-input');
+        const showRuby = document.getElementById('show-ruby');
+        const preview = document.getElementById('convert-preview');
+        const downloadBtn = document.getElementById('download-btn');
+
+const updatePreview = () => {
+    const text = input.value.trim();
+    const words = text.split(/\s+/);
+    preview.innerHTML = '';
+    
+    const className = showRuby.checked ? 'onva-r' : 'onva';
+    
+    words.forEach(word => {
+        if(!word) return;
+        const span = document.createElement('span');
+        span.className = `${className} text-4xl`;
+        span.textContent = word;
+        preview.appendChild(span);
+    });
+
+    // --- ここを追加！ ---
+    // JavaScriptが新しい要素を画像に変換するように命令する
+    if (typeof window.renderOnva === 'function') {
+        window.renderOnva();
+    }
+};
+
+        input.addEventListener('input', updatePreview);
+        showRuby.addEventListener('change', updatePreview);
+
+        // Download as Image
+        downloadBtn.addEventListener('click', () => {
+            const canvas = document.getElementById('export-canvas');
+            const ctx = canvas.getContext('2d');
+            const svgs = preview.querySelectorAll('svg');
+            
+            if(svgs.length === 0) return;
+
+            // Calculate canvas size
+            const padding = 40;
+            let totalWidth = padding * 2;
+            let maxHeight = 0;
+            
+            svgs.forEach(svg => {
+                const rect = svg.getBoundingClientRect();
+                totalWidth += rect.width + 20;
+                maxHeight = Math.max(maxHeight, rect.height);
+            });
+
+            canvas.width = totalWidth;
+            canvas.height = maxHeight + padding * 2;
+
+            // Fill background
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            let currentX = padding;
+            let loadedCount = 0;
+
+            svgs.forEach((svg, index) => {
+                const svgData = new XMLSerializer().serializeToString(svg);
+                const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+                const url = URL.createObjectURL(svgBlob);
+                const img = new Image();
+
+                img.onload = () => {
+                    ctx.drawImage(img, currentX, padding);
+                    currentX += svg.getBoundingClientRect().width + 20;
+                    loadedCount++;
+                    
+                    if(loadedCount === svgs.length) {
+                        const link = document.createElement('a');
+                        link.download = `byam-${Date.now()}.png`;
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                        URL.revokeObjectURL(url);
+                    }
+                };
+                img.src = url;
+            });
+        });
+
+    </script>
+</body>
+</html>

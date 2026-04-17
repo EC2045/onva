@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>onva Kingdom - Official Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- byam.js (onva.js) のロジックをモジュールとして適用 -->
+    <script type="module" src="https://rits1019c1.github.io/onva/byam.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Noto+Sans+JP:wght@300;400;700&display=swap');
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: #ffffff;
+            color: #1e293b;
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at 10% 20%, rgba(242, 252, 254, 1) 0%, rgba(238, 242, 243, 1) 90.1%);
+        }
+        /* byam.jsが生成する要素のレイアウト調整 */
+        .onva-container {
+            line-height: 1;
+        }
+        .onva-images img {
+            height: 1.2em !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-lg border-b border-slate-100">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <span class="onva text-2xl font-bold text-slate-900">onva</span>
+                <span class="text-[10px] tracking-[0.3em] font-black text-slate-400">EST. 1928</span>
+            </div>
+            <div class="flex gap-8 text-[11px] font-bold tracking-widest text-slate-500 uppercase">
+                <a href="index.html" class="text-blue-600 border-b-2 border-blue-600 pb-1">Kingdom</a>
+                <a href="anvum.html" class="hover:text-slate-900 transition">!Anvum</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-gradient pt-40 pb-32 px-6">
+        <div class="max-w-6xl mx-auto">
+            <h1 class="text-7xl font-bold tracking-tighter text-slate-900 mb-8">
+                Optimized <br>Future.
+            </h1>
+            <div class="flex items-center gap-4 mb-8">
+                <span class="text-slate-400 font-mono text-sm tracking-widest uppercase italic">Native:</span>
+                <span class="onva-r text-3xl font-bold text-slate-900">!anvu</span>
+            </div>
+            <p class="text-xl text-slate-600 max-w-2xl leading-relaxed mb-12">
+                ユーラシア大陸の深部に位置するonva（ア゛ンヴァ）。1928年、不合理な言語と複雑な社会システムを廃し、18文字のbyam（ビャ文字）を核とした「最適化」を掲げて建国されました。
+            </p>
+            <div class="flex gap-4">
+                <a href="anvum.html" class="px-8 py-4 bg-slate-900 text-white rounded-full font-bold hover:bg-slate-800 transition shadow-xl shadow-slate-200">
+                    Learn !anvum
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- History / People -->
+    <main class="py-32 px-6 max-w-6xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-24">
+            <!-- Culture -->
+            <div>
+                <h2 class="text-sm font-black tracking-[0.5em] text-blue-500 uppercase mb-6">Culture</h2>
+                <h3 class="text-3xl font-bold mb-6 text-slate-900">合理主義による言語の再構築</h3>
+                <p class="text-slate-500 leading-relaxed mb-6">
+                    onvaは、既存の言語の冗長性を排除するために1928年に誕生しました。住民は主に白人系で構成され、論理的な思考と機能美を何よりも尊重します。
+                    彼らが使用する18文字のbyamは、情報の伝達コストを最小化するために設計された究極の最適化ツールです。
+                </p>
+                <div class="p-8 bg-slate-50 rounded-3xl border border-slate-100">
+                    <div class="onva-r text-2xl mb-2">byam</div>
+                    <div class="text-slate-400 text-xs italic italic">"Characters that carry the weight of meaning with minimal form."</div>
+                </div>
+            </div>
+
+            <!-- Citizen -->
+            <div>
+                <h2 class="text-sm font-black tracking-[0.5em] text-blue-500 uppercase mb-6">Prominent Figure</h2>
+                <div class="group">
+                    <div class="aspect-square bg-slate-100 rounded-[3rem] mb-8 overflow-hidden flex items-center justify-center transition group-hover:shadow-2xl">
+                        <img src="https://rits1019c1.github.io/artr/art-sample.png" alt="Art Creator R" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="hidden text-slate-300 text-4xl font-bold">Art Creator R</span>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-2">Art Creator R</h3>
+                    <p class="text-slate-500 leading-relaxed">
+                        onva出身のデジタルアート作家。記号を用いた芸術表現や、独自の感性に基づく世界構築を行っています。
+                    </p>
+                    <a href="https://rits1019c1.github.io/artr/" target="_blank" class="inline-block mt-4 text-blue-500 font-bold hover:underline">View Portfolio →</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-20 border-t border-slate-100 text-center">
+        <div class="onva text-4xl text-slate-200 mb-4 tracking-widest">onva</div>
+        <p class="text-slate-400 text-xs tracking-widest uppercase">© 1928-2024 Kingdom of onva. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
