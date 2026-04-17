@@ -1,5 +1,5 @@
 (function() {
-    const BASE_URL = "https://rits1019c1.github.io/onva/letters/";
+    const BASE_URL = "https://rits1019c1.github.io/byam_letters/";
     
     // 文字データ定義
     const onvaData = [
