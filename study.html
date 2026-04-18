@@ -15,17 +15,13 @@
             color: #1e293b;
         }
 
-        .hero-gradient {
-            background: radial-gradient(circle at 10% 20%, rgba(242, 252, 254, 1) 0%, rgba(238, 242, 243, 1) 90.1%);
-        }
-
         .glass-card {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .onva-images img {
+        #quiz-area .onva-images img {
             height: 2.5em !important;
         }
 
@@ -37,6 +33,14 @@
 
         .correct-anim {
             animation: correct-pop 0.5s ease-out;
+        }
+
+        .vocab-card { transition: all 0.3s ease; }
+        .vocab-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
         }
     </style>
 </head>
@@ -56,136 +60,398 @@
         </div>
     </nav>
 
-    <main class="flex-grow pt-32 pb-24 px-6 max-w-4xl mx-auto w-full">
-        <!-- Progress Header -->
-        <header class="mb-12 flex justify-between items-end">
-            <div>
-                <h1 class="text-4xl font-black text-slate-900 mb-2">Flash Cards</h1>
-                <p class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Vocabulary Mastery</p>
-            </div>
-            <div class="text-right">
-                <div id="score" class="text-3xl font-black text-blue-600">0</div>
-                <div class="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Points</div>
-            </div>
-        </header>
-
-        <!-- Quiz Container -->
-        <div id="quiz-container" class="glass-card rounded-[3rem] p-12 shadow-2xl shadow-indigo-100/50 text-center relative overflow-hidden transition-all duration-500">
-            <!-- Question Region -->
-            <div class="mb-16">
-                <div id="question-symbol" class="onva flex justify-center mb-8 scale-150 py-12">
-                    <!-- Symbol will be injected here -->
+    <main class="flex-grow pt-32 pb-24 px-6 max-w-5xl mx-auto w-full">
+        
+        <!-- Mode Selection Menu -->
+        <div id="mode-menu" class="grid md:grid-cols-3 gap-6 mb-16">
+            <button onclick="startMode('char')" class="group p-6 bg-white border border-slate-100 rounded-[2.5rem] text-left hover:border-blue-500 hover:shadow-2xl transition-all flex flex-col justify-between">
+                <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-500 mb-4 group-hover:scale-110 transition shrink-0">
+                    <span class="onva text-2xl">!a</span>
                 </div>
-                <div id="message" class="h-6 text-sm font-bold opacity-0 transition-opacity">
-                    <!-- Correct/Incorrect message -->
+                <div>
+                    <h2 class="text-xl font-black mb-2 leading-tight">byam文字を覚える</h2>
+                    <p class="text-slate-400 text-xs">記号を見て対応する綴りを打ち込みます。</p>
                 </div>
-            </div>
-
-            <!-- Options Grid -->
-            <div id="options" class="grid grid-cols-2 gap-4">
-                <!-- Buttons will be injected here -->
-            </div>
-
-            <button id="next-btn" class="hidden mt-12 px-12 py-4 bg-slate-900 text-white rounded-full font-bold hover:bg-slate-800 transition shadow-xl shadow-slate-200 mx-auto">
-                Next Word →
+            </button>
+            <button onclick="startMode('word')" class="group p-6 bg-white border border-slate-100 rounded-[2.5rem] text-left hover:border-indigo-500 hover:shadow-2xl transition-all flex flex-col justify-between">
+                <div class="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-500 mb-4 group-hover:scale-110 transition shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                </div>
+                <div>
+                    <h2 class="text-xl font-black mb-2 leading-tight">単語を覚える</h2>
+                    <p class="text-slate-400 text-xs">日本語の意味からonvaの綴りを打ち込む実践モード。</p>
+                </div>
+            </button>
+            <button onclick="startMode('read')" class="group p-6 bg-white border border-slate-100 rounded-[2.5rem] text-left hover:border-emerald-500 hover:shadow-2xl transition-all flex flex-col justify-between">
+                <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-500 mb-4 group-hover:scale-110 transition shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                </div>
+                <div>
+                    <h2 class="text-xl font-black mb-2 leading-tight">onva語を読む</h2>
+                    <p class="text-slate-400 text-xs">onva記号を見て日本語の意味を当てる4択クイズ。</p>
+                </div>
             </button>
         </div>
 
-        <!-- Instructions -->
-        <footer class="mt-12 text-center">
-            <p class="text-slate-400 text-sm">
-                記号の意味に最も近い日本語を選んでください。
-            </p>
-        </footer>
+        <!-- Quiz Area -->
+        <div id="quiz-area" class="hidden">
+            <header class="mb-12 flex justify-between items-center">
+                <button onclick="backToMenu()" class="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-800 transition">← Back to Menu</button>
+                <div class="flex gap-8">
+                    <div class="text-right">
+                        <div id="queue-count" class="text-2xl font-black text-rose-400 leading-none">0</div>
+                        <div class="text-[8px] font-bold text-slate-300 uppercase tracking-widest mt-1">Review Queue</div>
+                    </div>
+                    <div class="text-right">
+                        <div id="score" class="text-4xl font-black text-blue-600 leading-none">0</div>
+                        <div class="text-[8px] font-bold text-slate-300 uppercase tracking-widest mt-1">Score</div>
+                    </div>
+                </div>
+            </header>
+
+            <div id="quiz-card" class="glass-card rounded-[3.5rem] p-12 shadow-2xl shadow-slate-100 text-center relative transition-all duration-500">
+                <div id="current-mode-label" class="mb-8">
+                    <span class="px-4 py-1 bg-slate-900 text-white text-[9px] font-black uppercase tracking-[0.2em] rounded-full">Mode</span>
+                </div>
+                
+                <div class="mb-16 min-h-[160px] flex flex-col justify-center items-center">
+                    <div id="question-text" class="text-4xl font-black text-slate-900 mb-6 h-12 flex items-center"></div>
+                    <div id="question-symbol" class="onva scale-[1.8] py-8 h-32 flex items-center"></div>
+                </div>
+
+                <!-- Multiple Choice Area (Read Mode) -->
+                <div id="options-grid" class="hidden grid grid-cols-2 gap-4 max-w-xl mx-auto mb-8"></div>
+
+                <!-- Typing Area (Word & Char Modes) -->
+                <div id="typing-area" class="max-w-xl mx-auto space-y-6">
+                    <div class="onva text-4xl h-16 flex justify-center items-center text-blue-500 opacity-50" id="typing-echo"></div>
+                    <input type="text" id="typing-input" autocomplete="off" placeholder="Type answer..." 
+                        class="w-full bg-slate-50 border-2 border-slate-100 rounded-[2rem] px-8 py-5 text-2xl font-black text-center text-slate-900 focus:border-blue-500 transition">
+                </div>
+
+                <div id="message" class="mt-8 h-4 text-[10px] font-black uppercase tracking-widest opacity-0 transition-opacity"></div>
+            </div>
+        </div>
+
+        <!-- Vocab Explorer -->
+        <section class="mt-20">
+            <header class="mb-12 flex justify-between items-center">
+                <h2 class="text-2xl font-black text-slate-800">Vocabulary Explorer</h2>
+                <div id="category-tabs" class="flex gap-2"></div>
+            </header>
+            <div id="vocab-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+        </section>
     </main>
 
+    <script src="vocabulary.js"></script>
     <script>
-        const vocabulary = [
-            { k: "!ann", m: "知恵/思考" },
-            { k: "!anbya", m: "国/中心" },
-            { k: "be", m: "美" },
-            { k: "wo-!a", m: "太陽" },
-            { k: "ritt", m: "AI/計算" },
-            { k: "!aiwon", m: "iPhone/スマホ" },
-            { k: "bya", m: "話す" },
-            { k: "h", m: "持つ" },
-            { k: "b-!a", m: "こんにちは" },
-            { k: "byap!an", m: "日本" },
-            { k: "yu-ri!a", m: "ユーラシア大陸" },
-            { k: "p-u", m: "2（二）" },
-            { k: "sye!ab", m: "よろしくお願いします" }
-        ];
-
+        let vocabularyData = VOCABULARY_DATA;
+        let allWordsFlat = [];
         let currentQuestion = null;
         let score = 0;
+        let activeMode = null;
+        let reviewQueue = []; // { item, delay }
+        const REVIEW_DELAY = 3;
+        let isCorrectionPhase = false;
 
-        function getRandomItem() {
-            return vocabulary[Math.floor(Math.random() * vocabulary.length)];
+        const byams = [
+            {k: "!a", m: "ア゛"}, {k: "e", m: "エ"}, {k: "u", m: "ウ"}, {k: "wo", m: "ヲ"},
+            {k: "i", m: "イ"}, {k: "yu", m: "ユ"}, {k: "r", m: "R"}, {k: "b", m: "B"},
+            {k: "g", m: "G"}, {k: "p", m: "P"}, {k: "bya", m: "ビャ"}, {k: "m", m: "M"},
+            {k: "n", m: "ン"}, {k: "z", m: "Z"}, {k: "sye", m: "シェ"}, {k: "ge", m: "ゲ"},
+            {k: "t", m: "T"}, {k: "h", m: "H"}
+        ];
+
+        function init() {
+            allWordsFlat = [];
+            Object.values(vocabularyData).forEach(list => { allWordsFlat = [...allWordsFlat, ...list]; });
+            renderTabs();
+            renderCategory('basics');
+        }
+
+        function startMode(mode) {
+            activeMode = mode;
+            document.getElementById('mode-menu').classList.add('hidden');
+            document.getElementById('quiz-area').classList.remove('hidden');
+            
+            let mName = '';
+            if(mode === 'char') mName = 'byam文字を覚える';
+            else if(mode === 'word') mName = '単語を覚える';
+            else if(mode === 'read') mName = 'onva語を読む';
+            
+            document.getElementById('current-mode-label').querySelector('span').textContent = mName;
+            generateQuiz();
+        }
+
+        function backToMenu() {
+            document.getElementById('mode-menu').classList.remove('hidden');
+            document.getElementById('quiz-area').classList.add('hidden');
         }
 
         function generateQuiz() {
-            currentQuestion = getRandomItem();
-            const symbolEl = document.getElementById('question-symbol');
-            symbolEl.textContent = currentQuestion.k;
-            symbolEl.dataset.processed = "";
-            
-            if (window.renderOnva) window.renderOnva();
+            const symEl = document.getElementById('question-symbol');
+            const textEl = document.getElementById('question-text');
+            const msgEl = document.getElementById('message');
+            const inputEl = document.getElementById('typing-input');
+            const echoEl = document.getElementById('typing-echo');
+            const optionsGrid = document.getElementById('options-grid');
+            const typingArea = document.getElementById('typing-area');
 
-            // Generate alternatives
-            let options = [currentQuestion.m];
-            while (options.length < 4) {
-                const randomItem = getRandomItem().m;
-                if (!options.includes(randomItem)) {
-                    options.push(randomItem);
+            msgEl.classList.add('opacity-0');
+            inputEl.value = '';
+            echoEl.innerHTML = '';
+            delete symEl.dataset.processed;
+
+            // Check review queue
+            let fromQueue = false;
+            for (let i = 0; i < reviewQueue.length; i++) {
+                reviewQueue[i].delay--;
+                if (reviewQueue[i].delay <= 0 && !fromQueue) {
+                    currentQuestion = reviewQueue.splice(i, 1)[0].item;
+                    fromQueue = true;
                 }
             }
-            options.sort(() => Math.random() - 0.5);
+            document.getElementById('queue-count').textContent = reviewQueue.length;
 
-            const optionsContainer = document.getElementById('options');
-            optionsContainer.innerHTML = '';
-            options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "px-6 py-6 bg-white border border-slate-100 rounded-3xl font-bold text-slate-600 hover:border-blue-400 hover:text-blue-600 hover:shadow-lg hover:shadow-blue-50 transition-all duration-300";
-                btn.textContent = opt;
-                btn.onclick = () => checkAnswer(opt, btn);
-                optionsContainer.appendChild(btn);
-            });
+            if (!fromQueue) {
+                if (activeMode === 'char') {
+                    currentQuestion = byams[Math.floor(Math.random() * byams.length)];
+                } else {
+                    currentQuestion = allWordsFlat[Math.floor(Math.random() * allWordsFlat.length)];
+                }
+            }
 
-            document.getElementById('next-btn').classList.add('hidden');
-            document.getElementById('message').classList.add('opacity-0');
-            document.getElementById('quiz-container').classList.remove('correct-anim');
+            if (activeMode === 'char') {
+                symEl.innerHTML = currentQuestion.k;
+                textEl.textContent = '';
+                typingArea.classList.remove('hidden');
+                optionsGrid.classList.add('hidden');
+            } else if (activeMode === 'read') {
+                symEl.innerHTML = currentQuestion.k;
+                textEl.textContent = '';
+                typingArea.classList.add('hidden');
+                optionsGrid.classList.remove('hidden');
+                
+                let options = [currentQuestion.m];
+                while(options.length < 4) {
+                    let r = allWordsFlat[Math.floor(Math.random() * allWordsFlat.length)].m;
+                    if(!options.includes(r)) options.push(r);
+                }
+                options.sort(() => Math.random() - 0.5);
+                optionsGrid.innerHTML = '';
+                options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = "px-6 py-4 bg-white border border-slate-100 rounded-[2rem] font-bold text-sm text-slate-600 hover:border-emerald-500 hover:text-emerald-600 hover:shadow-lg transition-all";
+                    btn.textContent = opt;
+                    btn.onclick = () => checkChoiceAnswer(opt, btn);
+                    optionsGrid.appendChild(btn);
+                });
+            } else {
+                textEl.textContent = currentQuestion.m;
+                symEl.innerHTML = '';
+                typingArea.classList.remove('hidden');
+                optionsGrid.classList.add('hidden');
+            }
+
+            if (window.renderOnva) window.renderOnva();
+            if (activeMode !== 'read') inputEl.focus();
         }
 
-        function checkAnswer(answer, btn) {
+        function checkAnswer(val) {
             const msgEl = document.getElementById('message');
             msgEl.classList.remove('opacity-0');
+            const cardEl = document.getElementById('quiz-card');
+            const inputEl = document.getElementById('typing-input');
+            const echoEl = document.getElementById('typing-echo');
             
-            if (answer === currentQuestion.m) {
-                score += 10;
-                document.getElementById('score').textContent = score;
-                msgEl.textContent = "Correct! +10pts";
-                msgEl.className = "h-6 text-sm font-black text-emerald-500 transition-opacity";
-                btn.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-600');
-                document.getElementById('quiz-container').classList.add('correct-anim');
+            if (val.toLowerCase() === currentQuestion.k.toLowerCase()) {
+                if (!isCorrectionPhase) {
+                    score += 10;
+                    document.getElementById('score').textContent = score;
+                    msgEl.textContent = "Correct! +10pts";
+                    msgEl.className = "mt-8 h-4 text-[10px] font-black uppercase tracking-widest text-emerald-500";
+                } else {
+                    msgEl.textContent = "Good correction!";
+                    msgEl.className = "mt-8 h-4 text-[10px] font-black uppercase tracking-widest text-blue-500";
+                }
+                
+                isCorrectionPhase = false;
+                cardEl.classList.add('correct-anim');
                 
                 setTimeout(() => {
+                    cardEl.classList.remove('correct-anim');
                     generateQuiz();
                 }, 1000);
             } else {
-                msgEl.textContent = "Try again!";
-                msgEl.className = "h-6 text-sm font-black text-rose-500 transition-opacity";
-                btn.classList.add('bg-rose-50', 'border-rose-200', 'text-rose-600');
-                setTimeout(() => {
-                    msgEl.classList.add('opacity-0');
-                    btn.className = "px-6 py-6 bg-white border border-slate-100 rounded-3xl font-bold text-slate-600 transition-all";
-                }, 1000);
+                if (!isCorrectionPhase) {
+                    if (!reviewQueue.find(q => q.item.k === currentQuestion.k)) {
+                        reviewQueue.push({ item: currentQuestion, delay: REVIEW_DELAY });
+                    }
+                    document.getElementById('queue-count').textContent = reviewQueue.length;
+                    isCorrectionPhase = true;
+                    
+                    msgEl.textContent = "Wrong! Answer is: " + currentQuestion.k;
+                    msgEl.className = "mt-8 h-4 text-[10px] font-black uppercase tracking-widest text-rose-500 transition-opacity duration-300";
+                    inputEl.disabled = true;
+                    inputEl.classList.add('opacity-50');
+                    
+                    setTimeout(() => {
+                        msgEl.classList.add('opacity-0');
+                        setTimeout(() => {
+                            msgEl.textContent = "Now, type from memory!";
+                            msgEl.classList.remove('text-rose-500');
+                            msgEl.classList.add('text-amber-500');
+                            msgEl.classList.remove('opacity-0');
+                            
+                            inputEl.disabled = false;
+                            inputEl.classList.remove('opacity-50');
+                            inputEl.value = '';
+                            echoEl.innerHTML = '';
+                            inputEl.focus();
+                        }, 300);
+                    }, 2000);
+                } else {
+                    msgEl.textContent = "Still incorrect. Answer is: " + currentQuestion.k;
+                    msgEl.className = "mt-8 h-4 text-[10px] font-black uppercase tracking-widest text-rose-500 transition-opacity duration-300";
+                    inputEl.disabled = true;
+                    inputEl.classList.add('opacity-50');
+                    
+                    setTimeout(() => {
+                        msgEl.classList.add('opacity-0');
+                        setTimeout(() => {
+                            msgEl.textContent = "Try again from memory.";
+                            msgEl.classList.remove('text-rose-500');
+                            msgEl.classList.add('text-amber-500');
+                            msgEl.classList.remove('opacity-0');
+                            
+                            inputEl.disabled = false;
+                            inputEl.classList.remove('opacity-50');
+                            inputEl.value = '';
+                            echoEl.innerHTML = '';
+                            inputEl.focus();
+                        }, 300);
+                    }, 2000);
+                }
             }
         }
 
-        // Wait for byam.js to load
-        window.addEventListener('load', () => {
-            generateQuiz();
+        function reRenderOptions() {
+            const oGrid = document.getElementById('options-grid');
+            let opts = Array.from(oGrid.children).map(b => b.textContent);
+            opts.sort(() => Math.random() - 0.5);
+            oGrid.innerHTML = '';
+            opts.forEach(opt => {
+                const b = document.createElement('button');
+                b.className = "px-6 py-4 bg-white border border-slate-100 rounded-[2rem] font-bold text-sm text-slate-600 hover:border-emerald-500 hover:text-emerald-600 hover:shadow-lg transition-all";
+                b.textContent = opt;
+                b.onclick = () => checkChoiceAnswer(opt, b);
+                oGrid.appendChild(b);
+            });
+        }
+
+        function checkChoiceAnswer(val, btn) {
+            const msgEl = document.getElementById('message');
+            msgEl.classList.remove('opacity-0');
+            const cardEl = document.getElementById('quiz-card');
+            
+            if (val === currentQuestion.m) {
+                if (!isCorrectionPhase) {
+                    score += 10;
+                    document.getElementById('score').textContent = score;
+                    msgEl.textContent = "Correct! +10pts";
+                    msgEl.className = "mt-8 h-4 text-[10px] font-black uppercase tracking-widest text-emerald-500";
+                } else {
+                    msgEl.textContent = "Good correction!";
+                    msgEl.className = "mt-8 h-4 text-[10px] font-black uppercase tracking-widest text-blue-500";
+                }
+                btn.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-600');
+                
+                isCorrectionPhase = false;
+                cardEl.classList.add('correct-anim');
+                
+                setTimeout(() => {
+                    cardEl.classList.remove('correct-anim');
+                    generateQuiz();
+                }, 1000);
+            } else {
+                if (!isCorrectionPhase) {
+                    if (!reviewQueue.find(q => q.item.k === currentQuestion.k)) {
+                        reviewQueue.push({ item: currentQuestion, delay: REVIEW_DELAY });
+                    }
+                    document.getElementById('queue-count').textContent = reviewQueue.length;
+                    isCorrectionPhase = true;
+                    
+                    msgEl.textContent = "Wrong! Answer is: " + currentQuestion.m;
+                    msgEl.className = "mt-8 h-4 text-[10px] font-black uppercase tracking-widest text-rose-500 transition-opacity duration-300";
+                    
+                    document.querySelectorAll('#options-grid button').forEach(b => { b.disabled = true; b.classList.add('opacity-50'); });
+                    
+                    setTimeout(() => {
+                        msgEl.classList.add('opacity-0');
+                        setTimeout(() => {
+                            msgEl.textContent = "Now, pick from memory!";
+                            msgEl.classList.remove('text-rose-500');
+                            msgEl.classList.add('text-amber-500');
+                            msgEl.classList.remove('opacity-0');
+                            reRenderOptions();
+                        }, 300);
+                    }, 2000);
+                } else {
+                    msgEl.textContent = "Still incorrect. Answer is: " + currentQuestion.m;
+                    msgEl.className = "mt-8 h-4 text-[10px] font-black uppercase tracking-widest text-rose-500 transition-opacity duration-300";
+                    document.querySelectorAll('#options-grid button').forEach(b => { b.disabled = true; b.classList.add('opacity-50'); });
+                    
+                    setTimeout(() => {
+                        msgEl.classList.add('opacity-0');
+                        setTimeout(() => {
+                            msgEl.textContent = "Try again.";
+                            msgEl.classList.remove('text-rose-500');
+                            msgEl.classList.add('text-amber-500');
+                            msgEl.classList.remove('opacity-0');
+                            reRenderOptions();
+                        }, 300);
+                    }, 2000);
+                }
+            }
+        }
+
+        document.getElementById('typing-input').addEventListener('input', (e) => {
+            const echo = document.getElementById('typing-echo');
+            echo.innerHTML = e.target.value;
+            delete echo.dataset.processed;
+            if (window.renderOnva) window.renderOnva();
         });
+
+        document.getElementById('typing-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkAnswer(e.target.value);
+        });
+
+        // Tabs & Explorer Logic
+        function renderTabs() {
+            const container = document.getElementById('category-tabs');
+            container.innerHTML = '';
+            Object.keys(vocabularyData).forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = "px-4 py-2 bg-white border border-slate-200 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition";
+                btn.textContent = cat;
+                btn.onclick = () => renderCategory(cat);
+                container.appendChild(btn);
+            });
+        }
+
+        function renderCategory(cat) {
+            const container = document.getElementById('vocab-grid');
+            container.innerHTML = '';
+            vocabularyData[cat].forEach(item => {
+                const card = document.createElement('div');
+                card.className = "vocab-card bg-white p-6 rounded-3xl border border-slate-100 flex flex-col items-center text-center";
+                card.innerHTML = `<div class="onva text-2xl mb-4 h-12 flex items-center">${item.k}</div><div class="text-[10px] font-mono text-slate-400 uppercase mb-2">${item.k}</div><div class="text-xs font-bold text-slate-500">${item.m}</div>`;
+                container.appendChild(card);
+            });
+            if (window.renderOnva) window.renderOnva();
+        }
+
+        window.addEventListener('load', init);
     </script>
 </body>
 </html>

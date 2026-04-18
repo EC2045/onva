@@ -292,6 +292,7 @@
         <p class="text-slate-300 text-[10px] font-black tracking-[0.4em] uppercase">onva Royal Linguistic Institute</p>
     </footer>
 
+    <script src="vocabulary.js"></script>
     <script>
         const byams = [
             { k: "!a", l: "ア゛" }, { k: "e", l: "エ" }, { k: "u", l: "ウ" }, { k: "wo", l: "ヲ" },
@@ -301,40 +302,20 @@
             { k: "t", l: "T" }, { k: "h", l: "H" }, { k: "-", l: "-" }
         ];
 
-        const vocabulary = {
-            basics: [
-                { k: "sye", m: "私" }, { k: "yu", m: "あなた" }, { k: "won", m: "人" },
-                { k: "won-yu", m: "友達" }, { k: "m", m: "水" }, { k: "z", m: "地面" },
-                { k: "hz", m: "家/場所" }, { k: "ge", m: "食べ物" },
-                { k: "b", m: "良/美" }, { k: "n", m: "否/悪" }
-            ],
-            concepts: [
-                { k: "!ann", m: "知恵/思考" }, { k: "!anbya", m: "国/中心" }, { k: "be", m: "美" },
-                { k: "wo-!a", m: "太陽" }, { k: "wo-u", m: "月" }, { k: "ritt", m: "AI/計算" },
-                { k: "!aiwon", m: "iPhone/スマホ" }, { k: "ge-ritt", m: "PC/計算機" },
-                { k: "m-wo-bya", m: "ネット" }, { k: "h-!a", m: "電池/エネ" },
-                { k: "zwo-sye", m: "パスワード" },
-                { k: "n-!a", m: "0（零）" }, { k: "t-i", m: "1（一）" }, { k: "p-u", m: "2（二）" },
-                { k: "r-e", m: "3（三）" }, { k: "z-h", m: "4（四）" }, { k: "m-!a", m: "5（五）" },
-                { k: "wo-t", m: "10（十）" }
-            ],
-            verbs: [
-                { k: "wor", m: "寝る" }, { k: "i", m: "食べる" }, { k: "h", m: "持つ" },
-                { k: "ne", m: "見る" }, { k: "te", m: "行く" }, { k: "ti", m: "来る" },
-                { k: "bya", m: "話す" }, { k: "m-i", m: "飲む" }, { k: "bya-m", m: "歌う" },
-                { k: "p-z", m: "座る/踏む" }, { k: "h-wo", m: "上げる" }
-            ],
-            conv: [
-                { k: "b-!a", m: "こんにちは" }, { k: "b-bya", m: "ありがとう" }, { k: "n-bya", m: "ごめんなさい" },
-                { k: "te-wo", m: "さようなら" }, { k: "h-b", m: "お願い" }, { k: "b-u", m: "楽しい/良" },
-                { k: "sye-yu", m: "大好き" }, { k: "sye!ab", m: "よろしくお願いします" }
-            ],
-            geo: [
-                { k: "yu-ri!a", m: "ユーラシア大陸" }, { k: "!autr!a", m: "オーストラリア" },
-                { k: "byap!an", m: "日本" }, { k: "byap!anm", m: "日本語" },
-                { k: "!anbya", m: "onva" }, { k: "!anbyam", m: "onva語" }
-            ]
-        };
+        let vocabulary = VOCABULARY_DATA;
+        let allTerms = [];
+
+        function init() {
+            // Prepare allTerms for analyzer
+            allTerms = [];
+            Object.values(vocabulary).forEach(list => {
+                allTerms = [...allTerms, ...list.map(v => v.k)];
+            });
+            // Sort by length for longest-match parsing
+            allTerms.sort((a, b) => b.length - a.length);
+
+            updateAllVocab();
+        }
 
         const grid = document.getElementById('alphabet-grid');
         byams.forEach(b => {
@@ -371,7 +352,8 @@
             renderVocab('vocab-geo', vocabulary.geo, filter);
         };
 
-        updateAllVocab();
+        // Initial load
+        window.addEventListener('load', init);
 
         // Search Logic
         document.getElementById('vocab-search').addEventListener('input', (e) => {
@@ -390,13 +372,16 @@
             }
 
             // 辞書と全文字を統合して長い順にソート（最長一致）
-            const allTerms = [
-                ...vocabulary.basics.map(v => ({ k: v.k, m: v.m, type: 'basic' })),
-                ...vocabulary.concepts.map(v => ({ k: v.k, m: v.m, type: 'concept' })),
-                ...vocabulary.verbs.map(v => ({ k: v.k, m: v.m, type: 'verb' })),
-                ...vocabulary.conv.map(v => ({ k: v.k, m: v.m, type: 'conv' })),
-                ...byams.map(b => ({ k: b.k, m: b.l, type: 'char' }))
-            ].sort((a, b) => b.k.length - a.k.length);
+            const searchTerms = [];
+            Object.keys(vocabulary).forEach(cat => {
+                vocabulary[cat].forEach(v => {
+                    searchTerms.push({ k: v.k, m: v.m, type: 'dictionary' });
+                });
+            });
+            byams.forEach(b => {
+                searchTerms.push({ k: b.k, m: b.l, type: 'char' });
+            });
+            searchTerms.sort((a, b) => b.k.length - a.k.length);
 
             analyzerResult.innerHTML = '';
             let currentIdx = 0;
@@ -406,7 +391,7 @@
                 let wordIdx = 0;
                 while (wordIdx < word.length) {
                     let matched = false;
-                    for (let term of allTerms) {
+                    for (let term of searchTerms) {
                         if (word.startsWith(term.k, wordIdx)) {
                             const card = document.createElement('div');
                             const colorClass = term.type === 'char' ? 'text-slate-400' : 'text-indigo-600';
