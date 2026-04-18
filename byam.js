@@ -42,8 +42,8 @@
         
         let style = "height:1em; vertical-align:middle; display:inline-block; margin:0 0.05em;";
         if (key === "-") {
-            // ハイフン専用の控えめなスタイル
-            style = "height:0.6em; width:0.4em; vertical-align:middle; display:inline-block; margin:0 0.1em; object-fit:contain;";
+            // 極端に控えめなスタイル
+            style = "height:0.3em; width:0.2em; vertical-align:middle; display:inline-block; margin:0 0.1em; object-fit:contain; opacity:0.6;";
         }
         
         return `<img src="${url}" alt="${key}" style="${style}">`;
