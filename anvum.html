@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,26 +9,32 @@
     <script type="module" src="https://rits1019c1.github.io/onva/byam.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Noto+Sans+JP:wght@300;400;700&family=JetBrains+Mono&display=swap');
+
         body {
             font-family: 'Inter', 'Noto Sans JP', sans-serif;
             background-color: #ffffff;
             color: #1e293b;
         }
+
         .byam-card {
             background: #ffffff;
             border: 1px solid #f1f5f9;
             transition: all 0.2s ease;
         }
+
         .byam-card:hover {
             border-color: #3b82f6;
             background: #f8faff;
         }
+
         .vocab-item {
             border-bottom: 1px solid #f1f5f9;
         }
+
         .vocab-item:last-child {
             border-bottom: none;
         }
+
         /* Converter Preview Style */
         #convert-preview {
             min-height: 120px;
@@ -42,6 +49,7 @@
         }
     </style>
 </head>
+
 <body class="bg-slate-50/50">
 
     <nav class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-lg border-b border-slate-100">
@@ -72,7 +80,7 @@
             </h2>
             <div class="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-9 gap-4" id="alphabet-grid"></div>
         </section>
-<section class="mb-32">
+        <section class="mb-32">
             <h2 class="text-2xl font-bold mb-10 flex items-center gap-3">
                 <span class="w-2 h-8 bg-emerald-500 rounded-full"></span>
                 Grammar (文法)
@@ -87,33 +95,37 @@
                     <hr class="border-slate-50">
                     <div>
                         <h4 class="font-bold text-slate-900 mb-2">疑問文</h4>
-                        <p class="text-sm text-slate-500 mb-2">Yes/No: 動詞を文頭へ / 内容疑問: 不明要素を <span class=“onva-r>wo</span> に置換</p>
+                        <p class="text-sm text-slate-500 mb-2">Yes/No: 動詞を文頭へ / 内容疑問: 不明要素を <span
+                                class=“onva-r>wo</span> に置換</p>
                         <div class="flex gap-4">
                             <span class="onva-r text-2xl">i sye wo</span>(何を食べる？）
                             <span class="text-slate-400">?</span>
                             Yes
-                 <span class="onva-r text-2xl">she!a</span>
+                            <span class="onva-r text-2xl">sye!a</span>
                             No
-                        <span class="onva-r text-2xl">ni!a</span>
+                            <span class="onva-r text-2xl">ni!a</span>
                         </div>
                     </div>
                 </div>
                 <div class="bg-white rounded-3xl p-8 border border-slate-100 space-y-6">
                     <div>
                         <h4 class="font-bold text-slate-900 mb-2">時制と相</h4>
-                        <p class="text-sm text-slate-500 mb-2">過去: 動詞+<span class=“onva-r>p</span> / 完了: 主語<span class=“onva-r>-!avh</span></p>
+                        <p class="text-sm text-slate-500 mb-2">過去: 動詞+<span class="onva-r">p</span> / 完了: 主語<span
+                                class="onva-r">-!abh</span></p>
                         <div class="grid grid-cols-2 gap-2">
                             <div class="onva-r text-2xl">i p</div>(食べた）
-                            <div class="onva-r text-2xl">sye !avh i</div>（私はたった今食べた)
+                            <div class="onva-r text-2xl">sye-!abh i</div>（私はたった今食べた)
                         </div>
                     </div>
                     <hr class="border-slate-50">
                     <div>
                         <h4 class="font-bold text-slate-900 mb-2">動名詞・仮定・命令</h4>
                         <ul class="text-sm text-slate-600 space-y-2">
-                            <li>• <strong>動名詞:</strong> <span class=“onva-r>ti- + 動詞 <span><span class="onva-r text-xl ml-2">ti-i</span></li>
-                            <li>• <strong>仮定法:</strong> 文頭に <span class=“onva-r>!avu<span> </li>
-                            <li>• <strong>命令形:</strong> <span class="onva-r">wo</span> を主語に <span class="onva-r text-xl ml-2">wo i</span></li>（食べろ）
+                            <li>• <strong>動名詞:</strong> <span class="onva-r">ti- + 動詞 <span><span
+                                            class="onva-r text-xl ml-2">ti-i</span></li>
+                            <li>• <strong>仮定法:</strong> 文頭に <span class="onva-r">!abu<span> </li>
+                            <li>• <strong>命令形:</strong> <span class="onva-r">wo</span> を主語に <span
+                                    class="onva-r text-xl ml-2">wo i</span></li>（食べろ）
                         </ul>
                     </div>
                 </div>
@@ -150,14 +162,17 @@
             <div class="bg-slate-900 rounded-[3rem] p-8 md:p-12 text-white shadow-2xl">
                 <div class="max-w-2xl mx-auto space-y-8">
                     <div class="space-y-4">
-                        <label class="block text-xs font-black uppercase tracking-widest text-slate-400">Input Text (Alphabet)</label>
-                        <input type="text" id="converter-input" placeholder="sye wor..." 
+                        <label class="block text-xs font-black uppercase tracking-widest text-slate-400">Input Text
+                            (Alphabet)</label>
+                        <input type="text" id="converter-input" placeholder="sye wor..."
                             class="w-full bg-slate-800 border-none rounded-2xl px-6 py-4 text-2xl font-bold text-white focus:ring-2 focus:ring-purple-500 outline-none">
-                        
+
                         <div class="flex items-center gap-6 pt-2">
                             <label class="flex items-center gap-3 cursor-pointer group">
-                                <input type="checkbox" id="show-ruby" class="w-5 h-5 rounded border-none bg-slate-700 checked:bg-purple-500 transition cursor-pointer">
-                                <span class="text-sm font-bold text-slate-400 group-hover:text-white transition">ふりがなを表示</span>
+                                <input type="checkbox" id="show-ruby"
+                                    class="w-5 h-5 rounded border-none bg-slate-700 checked:bg-purple-500 transition cursor-pointer">
+                                <span
+                                    class="text-sm font-bold text-slate-400 group-hover:text-white transition">ふりがなを表示</span>
                             </label>
                         </div>
                     </div>
@@ -170,8 +185,15 @@
                     </div>
 
                     <div class="flex justify-center pt-4">
-                        <button id="download-btn" class="px-10 py-4 bg-purple-600 hover:bg-purple-500 text-white rounded-full font-bold shadow-lg shadow-purple-900/20 transition-all flex items-center gap-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        <button id="download-btn"
+                            class="px-10 py-4 bg-purple-600 hover:bg-purple-500 text-white rounded-full font-bold shadow-lg shadow-purple-900/20 transition-all flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
                             PNGとして保存
                         </button>
                     </div>
@@ -189,17 +211,29 @@
 
     <script>
         const byams = [
-            {k: "!a", l: "ア゛"}, {k: "e", l: "エ"}, {k: "u", l: "ウ"}, {k: "wo", l: "ヲ"},
-            {k: "i", l: "イ"}, {k: "yu", l: "ユ"}, {k: "r", l: "R"}, {k: "b", l: "B"},
-            {k: "g", l: "G"}, {k: "p", l: "P"}, {k: "bya", l: "ビャ"}, {k: "m", l: "M"},
-            {k: "n", l: "ン"}, {k: "z", l: "Z"}, {k: "sye", l: "シェ"}, {k: "ge", l: "ゲ"},
-            {k: "t", l: "T"}, {k: "h", l: "H"}
+            { k: "!a", l: "ア゛" }, { k: "e", l: "エ" }, { k: "u", l: "ウ" }, { k: "wo", l: "ヲ" },
+            { k: "i", l: "イ" }, { k: "yu", l: "ユ" }, { k: "r", l: "R" }, { k: "b", l: "B" },
+            { k: "g", l: "G" }, { k: "p", l: "P" }, { k: "bya", l: "ビャ" }, { k: "m", l: "M" },
+            { k: "n", l: "ン" }, { k: "z", l: "Z" }, { k: "sye", l: "シェ" }, { k: "ge", l: "ゲ" },
+            { k: "t", l: "T" }, { k: "h", l: "H" }, { k: "-", l: "-" }
         ];
 
         const vocabulary = {
-            basics: [{k: "sye", m: "私"}, {k: "yu", m: "あなた"}, {k: "on", m: "人"}, {k: "ge", m: "食べ物"}, {k: "m", m: "水"}],
-            concepts: [{k: "an", m: "知恵"}, {k: "!anbya", m: "国/中心"}, {k: "ritt", m: "計算/AI"}, {k: "b-e", m: "美"}],
-            verbs: [{k: "wor", m: "寝る"}, {k: "i", m: "食べる/吸収する"}, {k: "h", m: "持つ"}, {k: "n-e", m: "見る/監視する"}]
+            basics: [
+                { k: "sye", m: "私" }, { k: "yu", m: "あなた" }, { k: "won", m: "人" },
+                { k: "won-yu", m: "友達" }, { k: "m", m: "水" }, { k: "z", m: "地面" },
+                { k: "hz", m: "家/場所" }, { k: "ge", m: "食べ物" }
+            ],
+            concepts: [
+                { k: "!ann", m: "知恵/思考" }, { k: "!anbya", m: "国/中心" }, { k: "be", m: "美" },
+                { k: "wo-!a", m: "太陽" }, { k: "wo-u", m: "月" }, { k: "ritt", m: "AI/計算" },
+                { k: "p-t", m: "技術/道具" }
+            ],
+            verbs: [
+                { k: "wor", m: "寝る" }, { k: "i", m: "食べる" }, { k: "h", m: "持つ" },
+                { k: "ne", m: "見る" }, { k: "te", m: "行く" }, { k: "ti", m: "来る" },
+                { k: "bya", m: "話す" }
+            ]
         };
 
         const grid = document.getElementById('alphabet-grid');
@@ -218,10 +252,10 @@
                 el.innerHTML = `<div><div class="onva text-xl text-slate-900">${v.k}</div><div class="text-[9px] font-mono text-slate-400 uppercase">${v.k}</div></div><div class="text-sm font-bold text-slate-500">${v.m}</div>`;
                 container.appendChild(el);
             });
-            
-    if (typeof window.renderOnva === 'function') {
-        window.renderOnva();
-    }
+
+            if (typeof window.renderOnva === 'function') {
+                window.renderOnva();
+            }
         };
 
         renderVocab('vocab-basics', vocabulary.basics);
@@ -234,27 +268,27 @@
         const preview = document.getElementById('convert-preview');
         const downloadBtn = document.getElementById('download-btn');
 
-const updatePreview = () => {
-    const text = input.value.trim();
-    const words = text.split(/\s+/);
-    preview.innerHTML = '';
-    
-    const className = showRuby.checked ? 'onva-r' : 'onva';
-    
-    words.forEach(word => {
-        if(!word) return;
-        const span = document.createElement('span');
-        span.className = `${className} text-4xl`;
-        span.textContent = word;
-        preview.appendChild(span);
-    });
+        const updatePreview = () => {
+            const text = input.value.trim();
+            const words = text.split(/\s+/);
+            preview.innerHTML = '';
 
-    // --- ここを追加！ ---
-    // JavaScriptが新しい要素を画像に変換するように命令する
-    if (typeof window.renderOnva === 'function') {
-        window.renderOnva();
-    }
-};
+            const className = showRuby.checked ? 'onva-r' : 'onva';
+
+            words.forEach(word => {
+                if (!word) return;
+                const span = document.createElement('span');
+                span.className = `${className} text-4xl`;
+                span.textContent = word;
+                preview.appendChild(span);
+            });
+
+            // --- ここを追加！ ---
+            // JavaScriptが新しい要素を画像に変換するように命令する
+            if (typeof window.renderOnva === 'function') {
+                window.renderOnva();
+            }
+        };
 
         input.addEventListener('input', updatePreview);
         showRuby.addEventListener('change', updatePreview);
@@ -264,14 +298,14 @@ const updatePreview = () => {
             const canvas = document.getElementById('export-canvas');
             const ctx = canvas.getContext('2d');
             const svgs = preview.querySelectorAll('svg');
-            
-            if(svgs.length === 0) return;
+
+            if (svgs.length === 0) return;
 
             // Calculate canvas size
             const padding = 40;
             let totalWidth = padding * 2;
             let maxHeight = 0;
-            
+
             svgs.forEach(svg => {
                 const rect = svg.getBoundingClientRect();
                 totalWidth += rect.width + 20;
@@ -290,7 +324,7 @@ const updatePreview = () => {
 
             svgs.forEach((svg, index) => {
                 const svgData = new XMLSerializer().serializeToString(svg);
-                const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+                const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
                 const url = URL.createObjectURL(svgBlob);
                 const img = new Image();
 
@@ -298,8 +332,8 @@ const updatePreview = () => {
                     ctx.drawImage(img, currentX, padding);
                     currentX += svg.getBoundingClientRect().width + 20;
                     loadedCount++;
-                    
-                    if(loadedCount === svgs.length) {
+
+                    if (loadedCount === svgs.length) {
                         const link = document.createElement('a');
                         link.download = `byam-${Date.now()}.png`;
                         link.href = canvas.toDataURL('image/png');
@@ -313,4 +347,5 @@ const updatePreview = () => {
 
     </script>
 </body>
+
 </html>

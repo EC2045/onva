@@ -208,14 +208,14 @@
 
     <script>
         const onvaData = [
-            { key: "!a", label: "ア゛", ext: "png" }, { key: "e", label: "エ", ext: "png" },
-            { key: "u", label: "ウ", ext: "png" }, { key: "wo", label: "ヲ", ext: "png" },
-            { key: "i", label: "イ", ext: "png" }, { key: "yu", label: "ユ", ext: "png" },
-            { key: "r", label: "R", ext: "svg" }, { key: "b", label: "B", ext: "svg" },
-            { key: "g", label: "G", ext: "svg" }, { key: "p", label: "P", ext: "svg" },
-            { key: "bya", label: "ビャ", ext: "svg" }, { key: "m", label: "M", ext: "svg" },
-            { key: "n", label: "ン", ext: "svg" }, { key: "z", label: "Z", ext: "svg" },
-            { key: "sye", label: "シェ", ext: "svg" }, { key: "ge", label: "ゲ", ext: "svg" },
+            { key: "!a", label: "ア゛", ext: "png" }, { key: "e", label: "エ" },
+            { key: "u", label: "ウ" }, { key: "wo", label: "ヲ" },
+            { key: "i", label: "イ" }, { key: "yu", label: "ユ" },
+            { key: "r", label: "R" }, { key: "b", label: "B" },
+            { key: "g", label: "G" }, { key: "p", label: "P" },
+            { key: "bya", label: "ビャ" }, { key: "m", label: "M" },
+            { key: "n", label: "ン" }, { key: "z", label: "Z" },
+            { key: "sye", label: "シェ" }, { key: "ge", label: "ゲ" },
             { key: "t", label: "T", ext: "svg" }, { key: "h", label: "H", ext: "svg" },
             { key: "-", label: "-", ext: "svg" }
         ];
@@ -343,7 +343,7 @@
                 let attempts = 0;
                 while (attempts < 50) {
                     let keys = [];
-                    let charLimit = level === 1 ? 5 : level === 2 ? 8 : level === 3 ? 12 : 18;
+                    let charLimit = level === 1 ? 5 : level === 2 ? 8 : level === 3 ? 12 : 19;
                     let maxChars = level === 1 ? 1 : level === 2 ? 2 : 3;
                     let count = maxChars === 1 ? 1 : Math.floor(Math.random() * maxChars) + 1;
 

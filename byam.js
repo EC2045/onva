@@ -39,7 +39,14 @@
             return item.composite.map(k => createImgHtml(k)).join('');
         }
         const url = getImgUrl(key);
-        return `<img src="${url}" alt="${key}" style="height:1em; vertical-align:middle; display:inline-block; margin:0 0.05em;">`;
+        
+        let style = "height:1em; vertical-align:middle; display:inline-block; margin:0 0.05em;";
+        if (key === "-") {
+            // ハイフン専用の控えめなスタイル
+            style = "height:0.6em; width:0.4em; vertical-align:middle; display:inline-block; margin:0 0.1em; object-fit:contain;";
+        }
+        
+        return `<img src="${url}" alt="${key}" style="${style}">`;
     }
 
     function processElement(el, showReading) {
