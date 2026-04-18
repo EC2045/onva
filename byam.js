@@ -1,5 +1,6 @@
 (function () {
     const BASE_URL = "https://rits1019c1.github.io/byam_letters/";
+    const WHITE_BASE_URL = "https://rits1019c1.github.io/byam_letters_white/";
 
     // 文字データ定義
     const onvaData = [
@@ -27,25 +28,26 @@
     // 長いキー順にソート（最長一致用）
     const sortedData = [...onvaData].sort((a, b) => b.key.length - a.key.length);
 
-    function getImgUrl(key) {
+    function getImgUrl(key, isWhite = false) {
         const item = onvaData.find(d => d.key === key);
         const ext = item ? item.ext : "svg";
-        return `${BASE_URL}${key}.${ext}`;
+        const base = isWhite ? WHITE_BASE_URL : BASE_URL;
+        return `${base}${key}.${ext}`;
     }
 
-    function createImgHtml(key) {
+    function createImgHtml(key, isWhite = false) {
         const item = onvaData.find(d => d.key === key);
         if (item && item.composite) {
-            return item.composite.map(k => createImgHtml(k)).join('');
+            return item.composite.map(k => createImgHtml(k, isWhite)).join('');
         }
-        const url = getImgUrl(key);
-        
+        const url = getImgUrl(key, isWhite);
+
         let style = "height:1em; vertical-align:middle; display:inline-block; margin:0 0.05em;";
         if (key === "-") {
             // 他の文字に負けない、しっかりとした繋ぎのサイズ
             style = "height:0.9em; width:0.8em; vertical-align:middle; display:inline-block; margin:0 0.05em; object-fit:contain;";
         }
-        
+
         return `<img src="${url}" alt="${key}" style="${style}">`;
     }
 
@@ -53,6 +55,7 @@
         const text = el.textContent.trim();
         if (!text) return;
 
+        const isWhite = el.classList.contains('onva-white') || !!el.closest('.onva-white');
         const words = text.split(/\s+/);
         let finalHtml = '<span class="onva-container" style="display:inline-flex; flex-direction:column; align-items:center; vertical-align:middle;">';
         let imagePart = '<span class="onva-images" style="display:flex; align-items:center; flex-wrap:wrap;">';
@@ -64,7 +67,7 @@
                 let matched = false;
                 for (let item of sortedData) {
                     if (word.startsWith(item.key, currentIdx)) {
-                        imagePart += createImgHtml(item.key);
+                        imagePart += createImgHtml(item.key, isWhite);
                         labelText += item.label;
                         currentIdx += item.key.length;
                         matched = true;

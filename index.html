@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,23 +10,28 @@
     <script type="module" src="https://rits1019c1.github.io/onva/byam.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Noto+Sans+JP:wght@300;400;700&display=swap');
+
         body {
             font-family: 'Inter', 'Noto Sans JP', sans-serif;
             background-color: #ffffff;
             color: #1e293b;
         }
+
         .hero-gradient {
             background: radial-gradient(circle at 10% 20%, rgba(242, 252, 254, 1) 0%, rgba(238, 242, 243, 1) 90.1%);
         }
+
         /* byam.jsが生成する要素のレイアウト調整 */
         .onva-container {
             line-height: 1;
         }
+
         .onva-images img {
             height: 1.2em !important;
         }
     </style>
 </head>
+
 <body>
 
     <!-- Navigation -->
@@ -37,13 +43,20 @@
             </div>
             <div class="flex items-center gap-6">
                 <div class="flex gap-4 text-[11px] font-bold tracking-widest text-slate-500 uppercase">
-                    <a href="index.html" class="nav-item text-blue-600 border-b-2 border-blue-600 pb-1" data-key="nav-kingdom">Kingdom</a>
-                    <a href="anvum.html" class="nav-item hover:text-slate-900 transition" data-key="nav-anvum">!Anvum</a>
+                    <a href="index.html" class="nav-item text-blue-600 border-b-2 border-blue-600 pb-1"
+                        data-key="nav-kingdom">Kingdom</a>
+                    <a href="anvum.html" class="nav-item hover:text-slate-900 transition"
+                        data-key="nav-anvum">!Anvum</a>
                 </div>
                 <!-- Language Switcher -->
-                <button id="lang-toggle" class="bg-slate-100 hover:bg-slate-200 px-3 py-1 rounded-full text-[10px] font-black text-slate-900 transition flex items-center gap-2">
+                <button id="lang-toggle"
+                    class="bg-slate-100 hover:bg-slate-200 px-3 py-1 rounded-full text-[10px] font-black text-slate-900 transition flex items-center gap-2">
                     <span id="lang-current">JP</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a2 2 0 00-2 2v11a3 3 0 106 0V4a2 2 0 00-2-2H4zm1 14a1 1 0 100-2 1 1 0 000 2zm5-1.757l4.9-4.9a1 1 0 00-1.414-1.414L10 12.429l-1.486-1.486a1 1 0 10-1.414 1.414l2.9 2.9a1 1 0 001.414 0z" clip-rule="evenodd" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M4 2a2 2 0 00-2 2v11a3 3 0 106 0V4a2 2 0 00-2-2H4zm1 14a1 1 0 100-2 1 1 0 000 2zm5-1.757l4.9-4.9a1 1 0 00-1.414-1.414L10 12.429l-1.486-1.486a1 1 0 10-1.414 1.414l2.9 2.9a1 1 0 001.414 0z"
+                            clip-rule="evenodd" />
+                    </svg>
                 </button>
             </div>
         </div>
@@ -63,7 +76,8 @@
                 ユーラシア大陸の深部に位置するonva（ア゛ンヴァ）。1928年、不合理な言語と複雑な社会システムを廃し、18文字のbyam（ビャ文字）を核とした「最適化」を掲げて建国されました。
             </p>
             <div class="flex gap-4">
-                <a href="anvum.html" class="px-8 py-4 bg-slate-900 text-white rounded-full font-bold hover:bg-slate-800 transition shadow-xl shadow-slate-200">
+                <a href="anvum.html"
+                    class="px-8 py-4 bg-slate-900 text-white rounded-full font-bold hover:bg-slate-800 transition shadow-xl shadow-slate-200 onva-white">
                     Learn !anvum
                 </a>
             </div>
@@ -83,7 +97,8 @@
                 </p>
                 <div class="p-8 bg-slate-50 rounded-3xl border border-slate-100">
                     <div class="onva-r text-2xl mb-2">byam</div>
-                    <div class="text-slate-400 text-xs italic italic">"Characters that carry the weight of meaning with minimal form."</div>
+                    <div class="text-slate-400 text-xs italic italic">"Characters that carry the weight of meaning with
+                        minimal form."</div>
                 </div>
             </div>
 
@@ -91,15 +106,19 @@
             <div>
                 <h2 class="text-sm font-black tracking-[0.5em] text-blue-500 uppercase mb-6">Prominent Figure</h2>
                 <div class="group">
-                    <div class="aspect-square bg-slate-100 rounded-[3rem] mb-8 overflow-hidden flex items-center justify-center transition group-hover:shadow-2xl">
-                        <img src="https://shun240523-stack.github.io/Symbolencyclopedia/symbols/%E7%B5%84%E7%B9%94%E7%95%AA%E5%8F%B7_003.png" alt="Art Creator R" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div
+                        class="aspect-square bg-slate-100 rounded-[3rem] mb-8 overflow-hidden flex items-center justify-center transition group-hover:shadow-2xl">
+                        <img src="https://shun240523-stack.github.io/Symbolencyclopedia/symbols/%E7%B5%84%E7%B9%94%E7%95%AA%E5%8F%B7_003.png"
+                            alt="Art Creator R" class="w-full h-full object-cover"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                         <span class="hidden text-slate-300 text-4xl font-bold">Art Creator R</span>
                     </div>
                     <h3 class="text-3xl font-bold mb-2">Art Creator R</h3>
                     <p class="text-slate-500 leading-relaxed">
                         onva出身のデジタルアート作家。記号を用いた芸術表現や、独自の感性に基づく世界構築を行っています。
                     </p>
-                    <a href="https://rits1019c1.github.io/artr/" target="_blank" class="inline-block mt-4 text-blue-500 font-bold hover:underline">View Portfolio →</a>
+                    <a href="https://rits1019c1.github.io/artr/" target="_blank"
+                        class="inline-block mt-4 text-blue-500 font-bold hover:underline">View Portfolio →</a>
                 </div>
             </div>
         </div>
@@ -107,7 +126,8 @@
 
     <footer class="py-20 border-t border-slate-100 text-center">
         <div class="onva text-4xl text-slate-200 mb-4 tracking-widest">!anbya</div>
-        <p class="translate text-slate-400 text-xs tracking-widest uppercase" data-key="footer-copy">© 1928-2024 Kingdom of onva. All rights reserved.</p>
+        <p class="translate text-slate-400 text-xs tracking-widest uppercase" data-key="footer-copy">© 1928-2024 Kingdom
+            of onva. All rights reserved.</p>
     </footer>
 
     <script>
@@ -147,23 +167,23 @@
             elements.forEach(el => {
                 const key = el.getAttribute('data-key');
                 const translation = translations[currentLang][key];
-                
+
                 // Reset processing status for byam.js
                 delete el.dataset.processed;
-                
+
                 if (currentLang === 'onva') {
                     el.classList.add('onva-r');
                 } else {
                     el.classList.remove('onva-r');
                     el.style.display = ''; // Reset any potential hidden styles
                 }
-                
+
                 el.innerHTML = translation;
             });
 
             // Toggle button text
             document.getElementById('lang-current').textContent = currentLang === 'ja' ? 'JP' : '!A';
-            
+
             // Re-render byam icons
             setTimeout(() => {
                 if (window.renderOnva) window.renderOnva();
@@ -187,4 +207,5 @@
     </script>
 
 </body>
+
 </html>
