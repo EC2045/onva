@@ -48,7 +48,7 @@
             style = "height:0.9em; width:0.8em; vertical-align:middle; display:inline-block; margin:0 0.05em; object-fit:contain;";
         }
 
-        return `<img src="${url}" alt="${key}" style="${style}">`;
+        return `<img src="${url}" alt="${key}" style="${style}" crossorigin="anonymous">`;
     }
 
     function processElement(el, showReading) {

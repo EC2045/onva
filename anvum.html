@@ -61,6 +61,7 @@
                 <a href="index.html" class="hover:text-slate-900 transition font-black">Kingdom</a>
                 <a href="anvum.html" class="text-blue-600 border-b-2 border-blue-600 pb-1 font-black">!anbyam</a>
                 <a href="study.html" class="hover:text-slate-900 transition font-black">Study</a>
+                <a href="print.html" class="hover:text-slate-900 transition font-black">Practice</a>
             </div>
         </div>
     </nav>
@@ -130,6 +131,18 @@
                                     class="bg-slate-100 text-blue-600 px-1 py-0.5 rounded">ti-</code> をつけると名詞化します <div
                                     class="inline-flex items-center gap-2 ml-2"><span
                                         class="onva-r text-xl text-slate-800">ti-i</span>（食べること）</div>
+                            </li>
+                            <li>• <strong>否定:</strong> 語頭に <code
+                                    class="bg-slate-100 text-rose-600 px-1 py-0.5 rounded">n-</code> をつけると否定表現になります。
+                                <div class="mt-1 space-y-1">
+                                    <div class="flex items-center gap-2">
+                                        <span class="onva-r text-xl text-slate-800">n-n!ag</span><span>（無駄のない / 最適化された）</span>
+                                    </div>
+                                    <div class="text-xs text-slate-400">※接頭辞が重なる場合、n- が最優先されます：</div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="onva-r text-xl text-slate-800">n-ti-wor</span><span>（寝ないこと）</span>
+                                    </div>
+                                </div>
                             </li>
                             <li>• <strong>仮定法:</strong> 文頭に <code
                                     class="bg-slate-100 text-slate-800 px-1 py-0.5 rounded font-mono">!abu</code> をつける
@@ -460,19 +473,21 @@
         downloadBtn.addEventListener('click', () => {
             const canvas = document.getElementById('export-canvas');
             const ctx = canvas.getContext('2d');
-            const svgs = preview.querySelectorAll('svg');
+            const imgs = preview.querySelectorAll('img');
 
-            if (svgs.length === 0) return;
+            if (imgs.length === 0) {
+                alert('コピーする画像がありません。文字を入力してください。');
+                return;
+            }
 
-            // Calculate canvas size
-            const padding = 40;
+            // Calculate canvas size using rendering dimensions
+            const padding = 60;
             let totalWidth = padding * 2;
             let maxHeight = 0;
 
-            svgs.forEach(svg => {
-                const rect = svg.getBoundingClientRect();
-                totalWidth += rect.width + 20;
-                maxHeight = Math.max(maxHeight, rect.height);
+            imgs.forEach(img => {
+                totalWidth += img.width + 10;
+                maxHeight = Math.max(maxHeight, img.height);
             });
 
             canvas.width = totalWidth;
@@ -483,39 +498,31 @@
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             let currentX = padding;
-            let loadedCount = 0;
+            
+            try {
+                imgs.forEach((img) => {
+                    ctx.drawImage(img, currentX, padding, img.width, img.height);
+                    currentX += img.width + 10;
+                });
 
-            svgs.forEach((svg, index) => {
-                const svgData = new XMLSerializer().serializeToString(svg);
-                const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-                const url = URL.createObjectURL(svgBlob);
-                const img = new Image();
+                canvas.toBlob(async (blob) => {
+                    if (!blob) return;
+                    try {
+                        const item = new ClipboardItem({ 'image/png': blob });
+                        await navigator.clipboard.write([item]);
 
-                img.onload = () => {
-                    ctx.drawImage(img, currentX, padding);
-                    currentX += svg.getBoundingClientRect().width + 20;
-                    loadedCount++;
-
-                    if (loadedCount === svgs.length) {
-                        canvas.toBlob(async (blob) => {
-                            if (!blob) return;
-                            try {
-                                const item = new ClipboardItem({ 'image/png': blob });
-                                await navigator.clipboard.write([item]);
-
-                                const btnHTML = downloadBtn.innerHTML;
-                                downloadBtn.innerHTML = '<span class="flex items-center gap-2">✓ コピーしました！</span>';
-                                setTimeout(() => { downloadBtn.innerHTML = btnHTML; }, 2000);
-                            } catch (e) {
-                                console.error('Clipboad format error:', e);
-                                alert('お使いのブラウザは画像のコピーに対応していません。');
-                            }
-                        }, 'image/png');
-                        URL.revokeObjectURL(url);
+                        const btnHTML = downloadBtn.innerHTML;
+                        downloadBtn.innerHTML = '<span class="flex items-center gap-2">✓ コピーしました！</span>';
+                        setTimeout(() => { downloadBtn.innerHTML = btnHTML; }, 2000);
+                    } catch (e) {
+                        console.error('Clipboard error:', e);
+                        alert('画像のコピーに失敗しました。ブラウザの設定や権限を確認してください。');
                     }
-                };
-                img.src = url;
-            });
+                }, 'image/png');
+            } catch (e) {
+                console.error('Canvas export error (likely CORS):', e);
+                alert('画像の取得に制限がかかっているため、コピーできませんでした。');
+            }
         });
 
     </script>

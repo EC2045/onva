@@ -70,11 +70,18 @@
             align-items: center;
         }
 
-        .word-cell .onva {
-            flex-wrap: nowrap !important;
-            white-space: nowrap !important;
+        .word-cell .onva,
+        .word-cell .onva-container {
             width: 100%;
-            justify-content: space-around;
+        }
+
+        .word-cell .onva-images {
+            width: 100%;
+            justify-content: space-around !important;
+        }
+
+        .word-cell .onva-images img {
+            margin: 0 !important;
         }
 
         .guide-grid {
@@ -172,9 +179,13 @@
             <span class="onva font-bold text-slate-900">!anbya</span>
             <div class="flex gap-4">
                 <a href="index.html"
-                    class="text-[11px] font-bold tracking-widest text-slate-500 hover:text-slate-900 uppercase">Home</a>
+                    class="text-[11px] font-bold tracking-widest text-slate-500 hover:text-slate-900 uppercase">Kingdom</a>
+                <a href="anvum.html"
+                    class="text-[11px] font-bold tracking-widest text-slate-500 hover:text-slate-900 uppercase">!Anbyam</a>
                 <a href="study.html"
                     class="text-[11px] font-bold tracking-widest text-slate-500 hover:text-slate-900 uppercase">Study</a>
+                <a href="print.html"
+                    class="text-blue-600 border-b-2 border-blue-600 pb-1 text-[11px] font-bold tracking-widest uppercase">Practice</a>
             </div>
             <button onclick="window.print()"
                 class="px-5 py-2 bg-slate-900 text-white rounded-full text-xs font-bold hover:bg-slate-800 transition shadow-lg">🖨️
@@ -249,7 +260,7 @@
             row.className = 'practice-row';
 
             // Calculate length of word in symbols
-            const regex = /(bya|sye|ge|wo|!a|e|u|i|yu|r|b|g|p|m|n|z|t|h)/g;
+            const regex = /(bya|sye|ge|wo|!a|e|u|i|yu|r|b|g|p|m|n|z|t|h|\-)/g;
             const match = item.k.match(regex);
             const numSymbols = match ? match.length : 1;
 
