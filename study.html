@@ -64,7 +64,7 @@
     <main class="flex-grow pt-32 pb-24 px-6 max-w-5xl mx-auto w-full">
         
         <!-- Mode Selection Menu -->
-        <div id="mode-menu" class="grid md:grid-cols-3 gap-6 mb-16">
+        <div id="mode-menu" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
             <button onclick="startMode('char')" class="group p-6 bg-white border border-slate-100 rounded-[2.5rem] text-left hover:border-blue-500 hover:shadow-2xl transition-all flex flex-col justify-between">
                 <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-500 mb-4 group-hover:scale-110 transition shrink-0">
                     <span class="onva text-2xl">!a</span>
@@ -90,6 +90,15 @@
                 <div>
                     <h2 class="text-xl font-black mb-2 leading-tight">onva語を読む</h2>
                     <p class="text-slate-400 text-xs">onva記号を見て日本語の意味を当てる4択クイズ。</p>
+                </div>
+            </button>
+            <button onclick="startMode('num')" class="group p-6 bg-white border border-slate-100 rounded-[2.5rem] text-left hover:border-orange-500 hover:shadow-2xl transition-all flex flex-col justify-between">
+                <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-500 mb-4 group-hover:scale-110 transition shrink-0">
+                    <span class="text-xl font-black italic">123</span>
+                </div>
+                <div>
+                    <h2 class="text-xl font-black mb-2 leading-tight">数字を覚える</h2>
+                    <p class="text-slate-400 text-xs">アラビア数字をonvaの数体系へ変換するトレーニング。</p>
                 </div>
             </button>
         </div>
@@ -163,6 +172,32 @@
             {k: "t", m: "T"}, {k: "h", m: "H"}
         ];
 
+        function convertNumberToOnva(num) {
+            const numWords = {
+                0: "n-!a", 1: "t-i", 2: "p-u", 3: "r-e", 4: "z-h", 5: "m-!a",
+                6: "ge-t", 7: "yu-i", 8: "h-t", 9: "n-wo", 10: "wo-t",
+                100: "t-wo", 1000: "wo-t!a"
+            };
+            if (num === 0) return numWords[0];
+            let result = [];
+            let n = num;
+            const units = [
+                { val: 1000, key: "wo-t!a" },
+                { val: 100, key: "t-wo" },
+                { val: 10, key: "wo-t" }
+            ];
+            units.forEach(unit => {
+                let count = Math.floor(n / unit.val);
+                if (count > 0) {
+                    if (count > 1) result.push(numWords[count] + unit.key);
+                    else result.push(unit.key);
+                    n %= unit.val;
+                }
+            });
+            if (n > 0) result.push(numWords[n]);
+            return result.join(' ');
+        }
+
         function init() {
             allWordsFlat = [];
             Object.values(vocabularyData).forEach(list => { allWordsFlat = [...allWordsFlat, ...list]; });
@@ -179,6 +214,7 @@
             if(mode === 'char') mName = 'byam文字を覚える';
             else if(mode === 'word') mName = '単語を覚える';
             else if(mode === 'read') mName = 'onva語を読む';
+            else if(mode === 'num') mName = '数字を覚える';
             
             document.getElementById('current-mode-label').querySelector('span').textContent = mName;
             generateQuiz();
@@ -214,9 +250,19 @@
             }
             document.getElementById('queue-count').textContent = reviewQueue.length;
 
-            if (!fromQueue) {
+            if (fromQueue) {
+                // Same
+            } else {
                 if (activeMode === 'char') {
                     currentQuestion = byams[Math.floor(Math.random() * byams.length)];
+                } else if (activeMode === 'num') {
+                    // Generate random number
+                    const rand = Math.floor(Math.random() * 9999);
+                    currentQuestion = {
+                        k: convertNumberToOnva(rand),
+                        m: rand.toString(),
+                        type: 'number'
+                    };
                 } else {
                     currentQuestion = allWordsFlat[Math.floor(Math.random() * allWordsFlat.length)];
                 }
@@ -247,6 +293,11 @@
                     btn.onclick = () => checkChoiceAnswer(opt, btn);
                     optionsGrid.appendChild(btn);
                 });
+            } else if (activeMode === 'num') {
+                textEl.textContent = currentQuestion.m;
+                symEl.innerHTML = '';
+                typingArea.classList.remove('hidden');
+                optionsGrid.classList.add('hidden');
             } else {
                 textEl.textContent = currentQuestion.m;
                 symEl.innerHTML = '';
@@ -446,7 +497,7 @@
             vocabularyData[cat].forEach(item => {
                 const card = document.createElement('div');
                 card.className = "vocab-card bg-white p-6 rounded-3xl border border-slate-100 flex flex-col items-center text-center";
-                card.innerHTML = `<div class="onva text-2xl mb-4 h-12 flex items-center">${item.k}</div><div class="text-[10px] font-mono text-slate-400 uppercase mb-2">${item.k}</div><div class="text-xs font-bold text-slate-500">${item.m}</div>`;
+                card.innerHTML = `<div class="onva text-2xl mb-4 min-h-[3rem] w-full flex items-center justify-center overflow-hidden flex-wrap">${item.k}</div><div class="text-[10px] font-mono text-slate-400 uppercase mb-2 break-all">${item.k}</div><div class="text-xs font-bold text-slate-500 leading-tight">${item.m}</div>`;
                 container.appendChild(card);
             });
             if (window.renderOnva) window.renderOnva();

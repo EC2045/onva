@@ -54,34 +54,44 @@
 
         .practice-row {
             display: flex;
-            gap: 0;
-            border-left: 2px solid #cbd5e1;
+            flex-wrap: wrap;
+            gap: 16px 0;
+            padding-left: 2px;
         }
 
         .practice-cell {
             width: 70px;
             height: 70px;
-            border-top: 2px solid #cbd5e1;
-            border-bottom: 2px solid #cbd5e1;
-            border-right: 2px solid #cbd5e1;
+            border: 2px solid #cbd5e1;
+            margin-left: -2px;
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        .word-cell .onva,
-        .word-cell .onva-container {
+        .practice-cell .onva,
+        .practice-cell .onva-container {
             width: 100%;
         }
 
-        .word-cell .onva-images {
+        .practice-cell .onva-images {
             width: 100%;
-            justify-content: space-around !important;
+            display: flex;
+            justify-content: flex-start !important;
         }
 
-        .word-cell .onva-images img {
+        .practice-cell .onva-images > * {
+            width: 70px !important;
+            height: 70px !important;
             margin: 0 !important;
+            object-fit: contain;
+            padding: 12px;
+            box-sizing: border-box;
+            flex-shrink: 0;
+            display: flex; /* Helps vertically center spans */
+            align-items: center;
+            justify-content: center;
         }
 
         .guide-grid {
@@ -165,9 +175,7 @@
             color: #94a3b8;
         }
 
-        .onva-images img {
-            height: 1.6em !important;
-        }
+        /* .onva-images height is controlled by practice-cell rule now */
     </style>
 </head>
 
@@ -221,12 +229,28 @@
         <!-- Page break for printing if needed -->
         <!-- <div class="page-break"></div> -->
 
+            <div id="words-grid" class="practice-grid">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+        <!-- Numbers Section -->
         <!-- Words Section -->
         <section class="mb-12">
             <h2 class="text-lg font-black mb-4 text-slate-700 flex items-center gap-2">
                 <span class="w-1.5 h-6 bg-emerald-500 rounded-full inline-block"></span> Common Words (単語)
             </h2>
             <div id="words-grid" class="practice-grid">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+        <!-- Numbers Section -->
+        <section class="mb-12">
+            <h2 class="text-lg font-black mb-4 text-slate-700 flex items-center gap-2">
+                <span class="w-1.5 h-6 bg-orange-500 rounded-full inline-block"></span> Numbers (数値)
+            </h2>
+            <div id="numbers-grid" class="practice-grid">
                 <!-- Injected via JS -->
             </div>
         </section>
@@ -250,7 +274,27 @@
             { k: "ritt", m: "AI/計算" },
             { k: "b-u", m: "楽しい/良" },
             { k: "te-wo", m: "さようなら" },
+            { k: "n!ag", m: "無駄" },
+            { k: "n-n!ag", m: "最適化/無駄のない" },
             { k: "sye!ab", m: "よろしく" }
+        ];
+
+        const numbersToPractice = [
+            { k: "n-!a", m: "0" },
+            { k: "t-i", m: "1" },
+            { k: "p-u", m: "2" },
+            { k: "r-e", m: "3" },
+            { k: "z-h", m: "4" },
+            { k: "m-!a", m: "5" },
+            { k: "ge-t", m: "6" },
+            { k: "yu-i", m: "7" },
+            { k: "h-t", m: "8" },
+            { k: "n-wo", m: "9" },
+            { k: "wo-t", m: "10" },
+            { k: "p-uwo-t m-!a", m: "25" },
+            { k: "n-wowo-t t-i", m: "91" },
+            { k: "t-wo", m: "100" },
+            { k: "wo-t!a", m: "1000" }
         ];
 
         const COLS = 10; // Total boxes per row
@@ -259,8 +303,8 @@
             const row = document.createElement('div');
             row.className = 'practice-row';
 
-            // Calculate length of word in symbols
-            const regex = /(bya|sye|ge|wo|!a|e|u|i|yu|r|b|g|p|m|n|z|t|h|\-)/g;
+            // Calculate length of word in symbols including space
+            const regex = /(bya|sye|ge|wo|!a|e|u|i|yu|r|b|g|p|m|n|z|t|h|\-|\s)/g;
             const match = item.k.match(regex);
             const numSymbols = match ? match.length : 1;
 
@@ -268,7 +312,9 @@
 
             // Cell width class
             const cellClass = isWord ? 'practice-cell word-cell' : 'practice-cell';
-            const drawCols = isWord ? Math.floor(COLS / numSymbols) : COLS;
+            
+            // Ensure at least 3 practice cells (Model, Trace, Write) are generated for words, even if they wrap
+            const drawCols = isWord ? Math.max(3, Math.floor(COLS / numSymbols)) : COLS;
 
             for (let i = 0; i < drawCols; i++) {
                 const cell = document.createElement('div');
@@ -319,6 +365,9 @@
 
             const wordsGrid = document.getElementById('words-grid');
             wordsToPractice.forEach(w => wordsGrid.appendChild(buildRow(w, true)));
+
+            const numbersGrid = document.getElementById('numbers-grid');
+            numbersToPractice.forEach(n => numbersGrid.appendChild(buildRow(n, true)));
 
             // Force rendering of the newly injected .onva elements
             if (typeof window.renderOnva === 'function') {

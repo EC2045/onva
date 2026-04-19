@@ -47,6 +47,8 @@
             padding: 2rem;
             border-radius: 1.5rem;
         }
+
+        /* onva-white will be handled natively by byam.js (fetching white SVG/PNG assets) */
     </style>
 </head>
 
@@ -93,6 +95,14 @@
                         <h4 class="font-bold text-slate-900 mb-2">基本語順: SVO</h4>
                         <p class="text-sm text-slate-500 mb-3 italic">「私は水と食べる（飲む）」</p>
                         <p class="onva-r text-3xl">sye i m</p>
+                        <div class="mt-4 pt-4 border-t border-slate-50">
+                            <h5 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-2">Copula (＝)</h5>
+                            <p class="text-sm text-slate-600 mb-2"><code class="bg-slate-100 text-slate-800 px-1 py-0.5 rounded font-mono">t-t</code> を使って「A は B である」を表します</p>
+                            <div class="flex items-center gap-2">
+                                <span class="onva-r text-xl text-slate-800">sye t-t !anbyawon</span>
+                                <span class="text-xs text-slate-400 font-bold">(私はオンヴァ人です)</span>
+                            </div>
+                        </div>
                     </div>
                     <hr class="border-slate-50">
                     <div>
@@ -152,11 +162,43 @@
                                 <div class="inline-flex items-center gap-2 ml-2"><span
                                         class="onva-r text-xl text-slate-800">wo i</span>（食べろ）</div>
                             </li>
+                            <li>• <strong>大きな数字:</strong> 数を並べることで掛け算的に表現できます。
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="onva-r text-xl text-slate-800">p-uwo-t!a</span><span>（2000 / 2×1000）</span>
+                                </div>
+                            </li>
+                            <li>• <strong>接続詞:</strong> 文と文を論理的に繋ぎます。
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="onva-r text-xl text-slate-800">t-tr</span><span>（そのため / だから）</span>
+                                </div>
+                            </li>
                         </ul>
                     </div>
                 </div>
             </div>
         </section>
+        <!-- Numeral Converter Tool -->
+        <section class="mb-32">
+            <h2 class="text-2xl font-bold mb-10 flex items-center gap-3">
+                <span class="w-2 h-8 bg-orange-500 rounded-full"></span>
+                Numeral Converter (数値変換)
+            </h2>
+            <div class="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm space-y-8">
+                <div class="space-y-4">
+                    <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400">Enter Number
+                        (0-9999)</label>
+                    <input type="number" id="num-input" placeholder="例: 2024" min="0" max="9999"
+                        class="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 text-2xl font-bold text-slate-900 focus:ring-2 focus:ring-orange-500 outline-none transition">
+                </div>
+                <div id="num-result-area" class="hidden space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div class="p-8 bg-slate-900 rounded-[2rem] text-center">
+                        <div id="num-onva-chars" class="onva-r onva-white text-5xl text-white mb-6"></div>
+                        <div id="num-onva-alpha" class="text-orange-400 font-black tracking-widest mb-2"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Dictionary Tools -->
         <section class="mb-32">
             <h2 class="text-2xl font-bold mb-10 flex items-center gap-3">
@@ -360,8 +402,8 @@
 
             filteredData.forEach(v => {
                 const el = document.createElement('div');
-                el.className = 'vocab-item py-3 flex justify-between items-center';
-                el.innerHTML = `<div><div class="onva text-xl text-slate-900">${v.k}</div><div class="text-[9px] font-mono text-slate-400 uppercase">${v.k}</div></div><div class="text-sm font-bold text-slate-500">${v.m}</div>`;
+                el.className = 'vocab-item py-3 flex justify-between items-center gap-4';
+                el.innerHTML = `<div class="shrink-0"><div class="onva text-xl text-slate-900">${v.k}</div><div class="text-[9px] font-mono text-slate-400 uppercase break-all max-w-[120px]">${v.k}</div></div><div class="text-sm font-bold text-slate-500 text-right leading-tight">${v.m}</div>`;
                 container.appendChild(el);
             });
 
@@ -500,29 +542,133 @@
             let currentX = padding;
             
             try {
-                imgs.forEach((img) => {
-                    ctx.drawImage(img, currentX, padding, img.width, img.height);
-                    currentX += img.width + 10;
+                const btnHTML = downloadBtn.innerHTML;
+                downloadBtn.innerHTML = '<span class="flex items-center gap-2">⏳ 処理中...</span>';
+                downloadBtn.disabled = true;
+
+                // ユーザーのクリック直後にクリップボードへの書き込み要求を開始し、データはPromiseで非同期に渡す
+                const blobPromise = new Promise(async (resolve, reject) => {
+                    try {
+                        // Fetch each image and draw sequentially to avoid canvas tainting
+                        for (const domImg of imgs) {
+                            const src = domImg.src;
+                            const res = await fetch(src, { mode: 'cors' });
+                            
+                            let url;
+                            if (src.endsWith('.svg')) {
+                                const svgText = await res.text();
+                                url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgText);
+                            } else {
+                                const blob = await res.blob();
+                                url = URL.createObjectURL(blob);
+                            }
+                            
+                            await new Promise((imgResolve, imgReject) => {
+                                const tempImg = new Image();
+                                tempImg.onload = () => {
+                                    ctx.drawImage(tempImg, currentX, padding, domImg.width, domImg.height);
+                                    currentX += domImg.width + 10;
+                                    if (!src.endsWith('.svg')) {
+                                        URL.revokeObjectURL(url);
+                                    }
+                                    imgResolve();
+                                };
+                                tempImg.onerror = imgReject;
+                                tempImg.crossOrigin = "anonymous";
+                                tempImg.src = url;
+                            });
+                        }
+
+                        canvas.toBlob((blob) => {
+                            if (blob) {
+                                resolve(blob);
+                            } else {
+                                reject(new Error('画像の生成に失敗しました'));
+                            }
+                        }, 'image/png');
+                    } catch (e) {
+                        reject(e);
+                    }
                 });
 
-                canvas.toBlob(async (blob) => {
-                    if (!blob) return;
-                    try {
-                        const item = new ClipboardItem({ 'image/png': blob });
-                        await navigator.clipboard.write([item]);
-
-                        const btnHTML = downloadBtn.innerHTML;
-                        downloadBtn.innerHTML = '<span class="flex items-center gap-2">✓ コピーしました！</span>';
-                        setTimeout(() => { downloadBtn.innerHTML = btnHTML; }, 2000);
-                    } catch (e) {
-                        console.error('Clipboard error:', e);
-                        alert('画像のコピーに失敗しました。ブラウザの設定や権限を確認してください。');
-                    }
-                }, 'image/png');
+                const item = new ClipboardItem({ 'image/png': blobPromise });
+                navigator.clipboard.write([item]).then(() => {
+                    downloadBtn.innerHTML = '<span class="flex items-center gap-2">✓ コピーしました！</span>';
+                    setTimeout(() => { 
+                        downloadBtn.innerHTML = btnHTML; 
+                        downloadBtn.disabled = false;
+                    }, 2000);
+                }).catch((e) => {
+                    console.error('Clipboard error:', e);
+                    alert('クリップボードへのアクセスが拒否されました。ブラウザの設定でクリップボード操作を許可してください。');
+                    downloadBtn.innerHTML = btnHTML;
+                    downloadBtn.disabled = false;
+                });
+                
             } catch (e) {
                 console.error('Canvas export error (likely CORS):', e);
-                alert('画像の取得に制限がかかっているため、コピーできませんでした。');
+                alert('画像の取得制限があるため、コピーできませんでした。');
+                downloadBtn.disabled = false;
             }
+        });
+
+        // --- Numeral Converter Logic ---
+        const numInput = document.getElementById('num-input');
+        const numResultArea = document.getElementById('num-result-area');
+        const numOnvaChars = document.getElementById('num-onva-chars');
+        const numOnvaAlpha = document.getElementById('num-onva-alpha');
+
+        const numWords = {
+            0: "n-!a", 1: "t-i", 2: "p-u", 3: "r-e", 4: "z-h", 5: "m-!a",
+            6: "ge-t", 7: "yu-i", 8: "h-t", 9: "n-wo", 10: "wo-t",
+            100: "t-wo", 1000: "wo-t!a"
+        };
+
+        const convertNumberToOnva = (num) => {
+            if (num === 0) return numWords[0];
+            
+            let result = [];
+            let n = num;
+
+            const units = [
+                { val: 1000, key: "wo-t!a" },
+                { val: 100, key: "t-wo" },
+                { val: 10, key: "wo-t" }
+            ];
+
+            units.forEach(unit => {
+                let count = Math.floor(n / unit.val);
+                if (count > 0) {
+                    if (count > 1) {
+                        result.push(numWords[count] + unit.key);
+                    } else {
+                        result.push(unit.key);
+                    }
+                    n %= unit.val;
+                }
+            });
+
+            if (n > 0) {
+                result.push(numWords[n]);
+            }
+
+            return result.join(' ');
+        };
+
+        numInput.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            if (isNaN(val) || val < 0 || val > 9999) {
+                numResultArea.classList.add('hidden');
+                return;
+            }
+
+            const alpha = convertNumberToOnva(val);
+            numResultArea.classList.remove('hidden');
+            numOnvaAlpha.textContent = alpha;
+            numOnvaChars.textContent = alpha;
+            
+            delete numOnvaChars.dataset.processed;
+            if (window.renderOnva) window.renderOnva();
         });
 
     </script>
