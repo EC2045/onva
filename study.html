@@ -64,7 +64,7 @@
     <main class="flex-grow pt-32 pb-24 px-6 max-w-5xl mx-auto w-full">
         
         <!-- Mode Selection Menu -->
-        <div id="mode-menu" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <div id="mode-menu" class="grid md:grid-cols-2 lg:grid-cols-5 gap-4 mb-16">
             <button onclick="startMode('char')" class="group p-6 bg-white border border-slate-100 rounded-[2.5rem] text-left hover:border-blue-500 hover:shadow-2xl transition-all flex flex-col justify-between">
                 <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-500 mb-4 group-hover:scale-110 transition shrink-0">
                     <span class="onva text-2xl">!a</span>
@@ -99,6 +99,15 @@
                 <div>
                     <h2 class="text-xl font-black mb-2 leading-tight">数字を覚える</h2>
                     <p class="text-slate-400 text-xs">アラビア数字をonvaの数体系へ変換するトレーニング。</p>
+                </div>
+            </button>
+            <button onclick="startMode('phrase')" class="group p-6 bg-white border border-slate-100 rounded-[2.5rem] text-left hover:border-rose-500 hover:shadow-2xl transition-all flex flex-col justify-between">
+                <div class="w-12 h-12 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-500 mb-4 group-hover:scale-110 transition shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+                </div>
+                <div>
+                    <h2 class="text-xl font-black mb-2 leading-tight">フレーズを覚える</h2>
+                    <p class="text-slate-400 text-xs">日常会話や重要な文章の組み立てを学びます。</p>
                 </div>
             </button>
         </div>
@@ -215,6 +224,7 @@
             else if(mode === 'word') mName = '単語を覚える';
             else if(mode === 'read') mName = 'onva語を読む';
             else if(mode === 'num') mName = '数字を覚える';
+            else if(mode === 'phrase') mName = 'フレーズを覚える';
             
             document.getElementById('current-mode-label').querySelector('span').textContent = mName;
             generateQuiz();
@@ -255,9 +265,16 @@
             } else {
                 if (activeMode === 'char') {
                     currentQuestion = byams[Math.floor(Math.random() * byams.length)];
+                } else if (activeMode === 'phrase') {
+                    currentQuestion = vocabularyData.phrases[Math.floor(Math.random() * vocabularyData.phrases.length)];
                 } else if (activeMode === 'num') {
-                    // Generate random number
-                    const rand = Math.floor(Math.random() * 9999);
+                    // Progressive difficulty based on score
+                    let max = 10;
+                    if (score > 600) max = 9999;
+                    else if (score > 300) max = 999;
+                    else if (score > 100) max = 99;
+                    
+                    const rand = Math.floor(Math.random() * (max + 1));
                     currentQuestion = {
                         k: convertNumberToOnva(rand),
                         m: rand.toString(),
