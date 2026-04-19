@@ -58,7 +58,7 @@
         const isWhite = el.classList.contains('onva-white') || !!el.closest('.onva-white');
         const words = text.split(/\s+/);
         let finalHtml = '<span class="onva-container" style="display:inline-flex; flex-direction:column; align-items:center; vertical-align:middle;">';
-        let imagePart = '<span class="onva-images" style="display:flex; align-items:center; flex-wrap:wrap;">';
+        let imagePart = '<span class="onva-images" style="display:flex; align-items:center; flex-wrap:nowrap;">';
         let labelText = '';
 
         words.forEach((word, wordIdx) => {
