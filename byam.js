@@ -35,29 +35,37 @@
         return `${base}${key}.${ext}`;
     }
 
-    function createImgHtml(key, isWhite = false) {
+    function createImgHtml(key, isWhite = false, isItalic = false) {
         const item = onvaData.find(d => d.key === key);
         if (item && item.composite) {
-            return item.composite.map(k => createImgHtml(k, isWhite)).join('');
+            return item.composite.map(k => createImgHtml(k, isWhite, isItalic)).join('');
         }
         const url = getImgUrl(key, isWhite);
 
-        let style = "height:1em; vertical-align:middle; display:inline-block; margin:0 0.05em;";
+        // イタリック（斜め）モード: skewX で傾ける
+        const italicStyle = isItalic ? " transform:skewX(-14deg); transform-origin:bottom center;" : "";
+
+        let style = `height:1em; vertical-align:middle; display:inline-block; margin:0 0.05em;${italicStyle}`;
         if (key === "-") {
-            // 他の文字に負けない、しっかりとした繋ぎのサイズ
-            style = "height:0.9em; width:0.8em; vertical-align:middle; display:inline-block; margin:0 0.05em; object-fit:contain;";
+            style = `height:0.9em; width:0.8em; vertical-align:middle; display:inline-block; margin:0 0.05em; object-fit:contain;${italicStyle}`;
         }
 
         return `<img src="${url}" alt="${key}" style="${style}" crossorigin="anonymous">`;
     }
 
-    function processElement(el, showReading) {
+    function processElement(el, showReading, isItalic = false) {
         const text = el.textContent.trim();
         if (!text) return;
 
         const isWhite = el.classList.contains('onva-white') || !!el.closest('.onva-white');
         const words = text.split(/\s+/);
-        let finalHtml = '<span class="onva-container" style="display:inline-flex; flex-direction:column; align-items:center; vertical-align:middle;">';
+
+        // イタリックモードではコンテナ全体を少し傾ける（padding で余白確保）
+        const containerStyle = isItalic
+            ? "display:inline-flex; flex-direction:column; align-items:center; vertical-align:middle; padding: 0 0.15em;"
+            : "display:inline-flex; flex-direction:column; align-items:center; vertical-align:middle;";
+
+        let finalHtml = `<span class="onva-container" style="${containerStyle}">`;
         let imagePart = '<span class="onva-images" style="display:flex; align-items:center; flex-wrap:nowrap;">';
         let labelText = '';
 
@@ -67,7 +75,7 @@
                 let matched = false;
                 for (let item of sortedData) {
                     if (word.startsWith(item.key, currentIdx)) {
-                        imagePart += createImgHtml(item.key, isWhite);
+                        imagePart += createImgHtml(item.key, isWhite, isItalic);
                         labelText += item.label;
                         currentIdx += item.key.length;
                         matched = true;
@@ -93,6 +101,7 @@
     }
 
     function init() {
+        // 通常モード (.onva)
         document.querySelectorAll('.onva').forEach(el => {
             if (!el.dataset.processed) {
                 processElement(el, false);
@@ -100,9 +109,26 @@
             }
         });
 
+        // 通常 + 読み (.onva-r)
         document.querySelectorAll('.onva-r').forEach(el => {
             if (!el.dataset.processed) {
                 processElement(el, true);
+                el.dataset.processed = "true";
+            }
+        });
+
+        // イタリック（斜め）モード (.onva-i) — 人物名など固有名詞向け
+        document.querySelectorAll('.onva-i').forEach(el => {
+            if (!el.dataset.processed) {
+                processElement(el, false, true);
+                el.dataset.processed = "true";
+            }
+        });
+
+        // イタリック + 読み (.onva-ri)
+        document.querySelectorAll('.onva-ri').forEach(el => {
+            if (!el.dataset.processed) {
+                processElement(el, true, true);
                 el.dataset.processed = "true";
             }
         });

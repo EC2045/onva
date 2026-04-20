@@ -26,8 +26,29 @@
             line-height: 1;
         }
 
+        .onva-images {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 2px;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
         .onva-images img {
-            height: 1.2em !important;
+            height: 1.1em !important;
+            width: auto !important;
+            max-width: 2.5em;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        /* onvaモード時のはみ出し対策 */
+        [data-key] {
+            overflow-wrap: break-word;
+            word-break: break-word;
+            max-width: 100%;
+            overflow: hidden;
         }
     </style>
 </head>
@@ -48,6 +69,7 @@
                     <a href="anvum.html" class="nav-item hover:text-slate-900 transition"
                         data-key="nav-anvum">!Anbyam</a>
                     <a href="study.html" class="nav-item hover:text-slate-900 transition" data-key="nav-study">Study</a>
+                    <a href="translation.html" class="nav-item hover:text-slate-900 transition">Translate</a>
                     <a href="print.html" class="nav-item hover:text-slate-900 transition"
                         data-key="nav-print">Practice</a>
                 </div>
@@ -68,7 +90,7 @@
     <!-- Hero Section -->
     <header class="hero-gradient pt-40 pb-32 px-6">
         <div class="max-w-6xl mx-auto">
-            <h1 class="text-7xl font-bold tracking-tighter text-slate-900 mb-8">
+            <h1 class="text-7xl font-bold tracking-tighter text-slate-900 mb-8 overflow-hidden min-h-[8rem]">
                 Optimized <br>Future.
             </h1>
             <div class="flex items-center gap-4 mb-8">
@@ -93,7 +115,7 @@
             <!-- Culture -->
             <div>
                 <h2 class="text-sm font-black tracking-[0.5em] text-blue-500 uppercase mb-6">Culture</h2>
-                <h3 class="text-3xl font-bold mb-6 text-slate-900">合理主義による言語の再構築</h3>
+                <h3 class="text-3xl font-bold mb-6 text-slate-900 overflow-hidden min-h-[2.5rem]">合理主義による言語の再構築</h3>
                 <p class="text-slate-500 leading-relaxed mb-6">
                     onvaは、既存の言語の冗長性を排除するために1928年に誕生しました。住民は主に白人系で構成され、論理的な思考と機能美を何よりも尊重します。
                     彼らが使用する18文字のbyamは、情報の伝達コストを最小化するために設計された究極の最適化ツールです。
@@ -116,7 +138,9 @@
                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                         <span class="hidden text-slate-300 text-4xl font-bold">Art Creator R</span>
                     </div>
-                    <h3 class="text-3xl font-bold mb-2">Art Creator R</h3>
+                    <h3 class="text-3xl font-bold mb-2 flex items-center gap-1" data-no-onva-class>
+                        <span class="onva">be ti-ge</span><span class="onva-i">r</span>
+                    </h3>
                     <p class="text-slate-500 leading-relaxed">
                         onva出身のデジタルアート作家。記号を用いた芸術表現や、独自の感性に基づく世界構築を行っています。
                     </p>
@@ -143,6 +167,7 @@
                 "culture-title": "合理主義による言語の再構築",
                 "culture-desc": "onvaは、既存の言語の冗長性を排除するために1928年に誕生しました。住民は主に白人系で構成され、論理的な思考と機能美を何よりも尊重します。私たちが使用する18文字のbyamは、情報の伝達コストを最小化するために設計された究極の最適化ツールです。",
                 "label-figure": "Prominent Figure",
+                "figure-name": "Art Creator R",
                 "figure-desc": "onva出身のデジタルアート作家。記号を用いた芸術表現や、独自の感性に基づく世界構築を行っています。",
                 "nav-kingdom": "Kingdom",
                 "nav-anvum": "!Anbyam",
@@ -152,16 +177,17 @@
             },
             onva: {
                 "hero-title": "n-n!ag <br> eti",
-                "hero-desc": "yu-ri!a !a-z !anbya wo-t!a n-wot-wo p-uwo-t h-t bya n!ag  n wo-t h-t z n-n!ag ti-ge !anbya-z",
-                "btn-learn": "",
-                "label-culture": "",
-                "culture-title": "",
-                "culture-desc": "",
-                "label-figure": "",
-                "figure-desc": "",
-                "nav-kingdom": "",
-                "nav-anvum": "",
-                "nav-study": "",
+                "hero-desc": "yu-ri!a !a-z !anbya wo-t!a n-wot-wo p-uwo-t h-t eti-p bya n!ag n wo-t h-t bya n-n!ag ti-ge-ep !anbya-zp",
+                "btn-learn": "!anne !anbyam",
+                "label-culture": "ritt-z",
+                "culture-title": "rep n-n!ag bya p-u-bya ti-ge p　",
+                "culture-desc": "!anbya wo-t!a n-wot-wo p-uwo-t h-t n-n!ag bya ti-ge-ep p won-r b-u-won !ann b rep sye wo-t h-t byam bya-ritt i-t n-e ti-ge-ep p !a-wo n-n!ag ge",
+                "label-figure": "b !anbyawon",
+                "figure-name": "<span class='onva'>be ti-ge</span><span class='onva-i'>r</span>",
+                "figure-desc": "!anbyawon ritt-t be-bya ti-ge won byam h be-bya sye-t u ge-wo ti-ge",
+                "nav-kingdom": "!anbya",
+                "nav-anvum": "!Anbyam",
+                "nav-study": "!anne",
                 "nav-print": "",
                 "footer-copy": ""
             }
@@ -177,6 +203,14 @@
 
                 // Reset processing status for byam.js
                 delete el.dataset.processed;
+                // Also reset any child onva elements
+                el.querySelectorAll('[data-processed]').forEach(child => delete child.dataset.processed);
+
+                // data-no-onva-class: don't add 'onva' class to parent (children handle rendering)
+                if (el.hasAttribute('data-no-onva-class')) {
+                    el.innerHTML = translation;
+                    return;
+                }
 
                 if (currentLang === 'onva') {
                     el.classList.add('onva');
@@ -210,6 +244,8 @@
         document.querySelectorAll('h3')[0].setAttribute('data-key', 'culture-title');
         document.querySelectorAll('main p')[0].setAttribute('data-key', 'culture-desc');
         document.querySelectorAll('h2')[1].setAttribute('data-key', 'label-figure');
+        document.querySelectorAll('h3')[1].setAttribute('data-key', 'figure-name');
+        document.querySelectorAll('h3')[1].setAttribute('data-no-onva-class', '');
         document.querySelectorAll('main p')[1].setAttribute('data-key', 'figure-desc');
     </script>
 

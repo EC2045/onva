@@ -48,6 +48,50 @@
             border-radius: 1.5rem;
         }
 
+        .vocab-tab {
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #64748b;
+            background: #f1f5f9;
+            transition: all 0.2s ease;
+        }
+
+        .vocab-tab:hover {
+            color: #1e293b;
+            background: #e2e8f0;
+        }
+
+        .vocab-tab.active {
+            color: white;
+            background: #3b82f6;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Prevent overflow of onva images in items */
+        .onva-images {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2px;
+            max-width: 100%;
+        }
+
+        .onva-images img {
+            max-width: 100%;
+            height: auto !important;
+            max-height: 1.2em; /* Keep it consistent with text size */
+        }
+
+        #vocab-display .onva {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
         /* onva-white will be handled natively by byam.js (fetching white SVG/PNG assets) */
     </style>
 </head>
@@ -63,6 +107,7 @@
                 <a href="index.html" class="hover:text-slate-900 transition font-black">Kingdom</a>
                 <a href="anvum.html" class="text-blue-600 border-b-2 border-blue-600 pb-1 font-black">!anbyam</a>
                 <a href="study.html" class="hover:text-slate-900 transition font-black">Study</a>
+                <a href="translation.html" class="hover:text-slate-900 transition font-black">Translate</a>
                 <a href="print.html" class="hover:text-slate-900 transition font-black">Practice</a>
             </div>
         </div>
@@ -125,12 +170,22 @@
                 </div>
                 <div class="bg-white rounded-3xl p-8 border border-slate-100 space-y-6">
                     <div>
-                        <h4 class="font-bold text-slate-900 mb-2">時制と相</h4>
+                        <h4 class="font-bold text-slate-900 mb-2">時制と相・受け身</h4>
                         <p class="text-sm text-slate-500 mb-2">過去: 動詞+<span class="onva-r">p</span> / 完了: 主語<span
-                                class="onva-r">-!abh</span></p>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div class="onva-r text-2xl">i p</div>(食べた）
-                            <div class="onva-r text-2xl">sye-!abh i</div>（私はたった今食べた)
+                                class="onva-r">-!abh</span> / 受け身: 動詞+<span class="onva-r">ep</span></p>
+                        <div class="grid grid-cols-1 gap-3">
+                            <div class="flex items-center gap-2">
+                                <span class="onva-r text-2xl">i p</span>
+                                <span class="text-xs font-bold text-slate-600">(食べた)</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="onva-r text-2xl">sye-!abh i</span>
+                                <span class="text-xs font-bold text-slate-600">(私はたった今食べた)</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="onva-r text-2xl">i-ep</span>
+                                <span class="text-xs font-bold text-slate-600">(食べられる)</span>
+                            </div>
                         </div>
                     </div>
                     <hr class="border-slate-50">
@@ -229,33 +284,26 @@
         </section>
 
         <!-- Dictionary Section -->
-        <section class="mb-32">
-            <h2 class="text-2xl font-bold mb-10 flex items-center gap-3">
-                <span class="w-2 h-8 bg-blue-500 rounded-full"></span>
-                Dictionary (単語集)
-            </h2>
-            <div class="grid md:grid-cols-4 gap-8" id="vocab-container">
-                <div class="bg-white rounded-3xl p-8 border border-slate-100">
-                    <h3 class="text-blue-500 font-black text-xs uppercase tracking-widest mb-6">Basics</h3>
-                    <div class="space-y-4" id="vocab-basics"></div>
+        <section class="mb-32" id="dictionary">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+                <h2 class="text-2xl font-bold flex items-center gap-3">
+                    <span class="w-2 h-8 bg-blue-500 rounded-full"></span>
+                    Dictionary (単語集)
+                </h2>
+                <!-- Tab Switching -->
+                <div class="flex flex-wrap gap-2" id="vocab-tabs">
+                    <button onclick="switchTab('all')" class="vocab-tab active" data-tab="all">All</button>
+                    <button onclick="switchTab('basics')" class="vocab-tab" data-tab="basics">Basics</button>
+                    <button onclick="switchTab('concepts')" class="vocab-tab" data-tab="concepts">Concepts</button>
+                    <button onclick="switchTab('verbs')" class="vocab-tab" data-tab="verbs">Verbs</button>
+                    <button onclick="switchTab('phrases')" class="vocab-tab" data-tab="phrases">Phrases</button>
+                    <button onclick="switchTab('conv')" class="vocab-tab" data-tab="conv">Conv</button>
+                    <button onclick="switchTab('geo')" class="vocab-tab" data-tab="geo">Geo</button>
                 </div>
-                <div class="bg-white rounded-3xl p-8 border border-slate-100">
-                    <h3 class="text-blue-500 font-black text-xs uppercase tracking-widest mb-6">Concepts, IT & Numbers
-                    </h3>
-                    <div class="space-y-4" id="vocab-concepts"></div>
-                </div>
-                <div class="bg-white rounded-3xl p-8 border border-slate-100">
-                    <h3 class="text-blue-500 font-black text-xs uppercase tracking-widest mb-6">Verbs</h3>
-                    <div class="space-y-4" id="vocab-verbs"></div>
-                </div>
-                <div class="bg-white rounded-3xl p-8 border border-slate-100">
-                    <h3 class="text-emerald-500 font-black text-xs uppercase tracking-widest mb-6">Conversation</h3>
-                    <div class="space-y-4" id="vocab-conv"></div>
-                </div>
-                <div class="bg-white rounded-3xl p-8 border border-slate-100">
-                    <h3 class="text-orange-500 font-black text-xs uppercase tracking-widest mb-6">Geography</h3>
-                    <div class="space-y-4" id="vocab-geo"></div>
-                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" id="vocab-display">
+                <!-- Dynamically filled -->
             </div>
         </section>
 
@@ -409,17 +457,91 @@
 
             if (typeof window.renderOnva === 'function') { window.renderOnva(); }
         };
+        
+        let activeVocabTab = 'all';
+
+        const renderVocabItem = (v) => {
+            const item = document.createElement('div');
+            item.className = 'bg-white rounded-3xl p-6 border border-slate-100 shadow-sm flex flex-col items-center text-center animate-in zoom-in-95 duration-200 hover:shadow-md transition-shadow overflow-hidden';
+            item.innerHTML = `
+                <div class="onva text-2xl text-slate-900 mb-4 w-full flex justify-center">${v.k}</div>
+                <div class="text-[9px] font-mono text-slate-400 uppercase mb-2 break-all w-full">${v.k}</div>
+                <div class="text-xs font-bold text-slate-500 leading-tight w-full">${v.m}</div>
+            `;
+            return item;
+        };
+
+        const renderVocabCategory = (catName, data, filter = "") => {
+            const filteredData = data.filter(v =>
+                v.k.toLowerCase().includes(filter.toLowerCase()) ||
+                v.m.includes(filter)
+            );
+
+            if (filteredData.length === 0 && filter) return null;
+
+            const categorySection = document.createElement('div');
+            categorySection.className = 'bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300';
+            
+            let colorClass = 'text-blue-500';
+            if (catName === 'conv') colorClass = 'text-emerald-500';
+            if (catName === 'geo') colorClass = 'text-orange-500';
+            if (catName === 'phrases') colorClass = 'text-rose-500';
+
+            categorySection.innerHTML = `<h3 class="${colorClass} font-black text-[10px] uppercase tracking-widest mb-6">${catName}</h3>`;
+            
+            const list = document.createElement('div');
+            list.className = 'space-y-4';
+            
+            filteredData.forEach(v => {
+                const item = document.createElement('div');
+                item.className = 'vocab-item py-3 flex justify-between items-center gap-4 border-b border-slate-50 last:border-0';
+                item.innerHTML = `<div class="shrink-0"><div class="onva text-xl text-slate-900">${v.k}</div><div class="text-[9px] font-mono text-slate-400 uppercase break-all max-w-[120px]">${v.k}</div></div><div class="text-xs font-bold text-slate-500 text-right leading-tight max-w-[150px]">${v.m}</div>`;
+                list.appendChild(item);
+            });
+
+            categorySection.appendChild(list);
+            return categorySection;
+        };
 
         const updateAllVocab = (filter = "") => {
-            renderVocab('vocab-basics', vocabulary.basics, filter);
-            renderVocab('vocab-concepts', vocabulary.concepts, filter);
-            renderVocab('vocab-verbs', vocabulary.verbs, filter);
-            renderVocab('vocab-conv', vocabulary.conv, filter);
-            renderVocab('vocab-geo', vocabulary.geo, filter);
+            const display = document.getElementById('vocab-display');
+            display.innerHTML = '';
+
+            const categories = Object.keys(vocabulary);
+            
+            if (!filter && activeVocabTab !== 'all') {
+                // Specific Category Grid Mode
+                display.className = 'grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4';
+                vocabulary[activeVocabTab].forEach(v => {
+                    display.appendChild(renderVocabItem(v));
+                });
+            } else {
+                // Category Card Mode (for 'All' or Search)
+                display.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8';
+                categories.forEach(cat => {
+                    if (filter || activeVocabTab === 'all' || activeVocabTab === cat) {
+                        const section = renderVocabCategory(cat, vocabulary[cat], filter);
+                        if (section) display.appendChild(section);
+                    }
+                });
+            }
+
+            if (typeof window.renderOnva === 'function') { window.renderOnva(); }
+        };
+
+        window.switchTab = (tab) => {
+            activeVocabTab = tab;
+            document.querySelectorAll('.vocab-tab').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tab);
+            });
+            updateAllVocab(document.getElementById('vocab-search').value);
         };
 
         // Initial load
-        window.addEventListener('load', init);
+        window.addEventListener('load', () => {
+            init();
+            updateAllVocab();
+        });
 
         // Search Logic
         document.getElementById('vocab-search').addEventListener('input', (e) => {

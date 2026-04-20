@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>onva → 日本語 翻訳ツール</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="https://rits1019c1.github.io/onva/byam.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Noto+Sans+JP:wght@300;400;700&family=JetBrains+Mono&display=swap');
+
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        textarea {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        textarea:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .token-known {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4px 8px;
+            margin: 3px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .token-known:hover {
+            background: #dbeafe;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+        }
+
+        .token-unknown {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4px 8px;
+            margin: 3px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+        }
+
+        .token-phrase {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 6px 12px;
+            margin: 3px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 16px;
+        }
+
+        .token-space {
+            display: inline-block;
+            width: 16px;
+        }
+
+        .onva-preview .onva-images img {
+            height: 1.6em !important;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-animate {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <span class="onva font-bold text-slate-900">!anbya</span>
+            <div class="flex gap-4">
+                <a href="index.html"
+                    class="text-[11px] font-bold tracking-widest text-slate-500 hover:text-slate-900 uppercase transition">Kingdom</a>
+                <a href="anvum.html"
+                    class="text-[11px] font-bold tracking-widest text-slate-500 hover:text-slate-900 uppercase transition">!Anbyam</a>
+                <a href="study.html"
+                    class="text-[11px] font-bold tracking-widest text-slate-500 hover:text-slate-900 uppercase transition">Study</a>
+                <a href="translation.html"
+                    class="text-blue-600 border-b-2 border-blue-600 pb-1 text-[11px] font-bold tracking-widest uppercase">Translate</a>
+                <a href="print.html"
+                    class="text-[11px] font-bold tracking-widest text-slate-500 hover:text-slate-900 uppercase transition">Practice</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow pt-28 pb-24 px-6 max-w-5xl mx-auto w-full">
+
+        <!-- Hero -->
+        <header class="mb-16 text-center">
+            <h1 class="text-4xl font-black text-slate-900 mb-4">onva → 日本語</h1>
+            <p class="text-slate-400 text-sm font-bold">onva語のテキストを入力すると、単語ごとに解析して日本語の意味を表示します。</p>
+        </header>
+
+        <!-- Input Area -->
+        <section class="mb-8">
+            <div class="glass-card rounded-[2.5rem] p-8 shadow-xl shadow-slate-100/50">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="w-2 h-6 bg-blue-500 rounded-full"></span>
+                    <h2 class="text-sm font-black uppercase tracking-widest text-slate-500">Input (onva語)</h2>
+                </div>
+                <textarea id="onva-input" rows="4" placeholder="onva語を入力してください... 例: b-!a sye t-t !anbyawon"
+                    class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-4 text-lg text-slate-900 resize-none focus:border-blue-400 transition"></textarea>
+                <div class="flex justify-between items-center mt-4">
+                    <div class="onva-preview">
+                        <div class="onva text-2xl text-slate-400" id="live-preview"></div>
+                    </div>
+                    <button onclick="translateOnva()"
+                        class="px-8 py-3 bg-slate-900 text-white rounded-full text-xs font-black uppercase tracking-widest hover:bg-slate-800 transition shadow-lg hover:shadow-xl">
+                        翻訳する
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Legend -->
+        <div class="flex flex-wrap gap-6 mb-8 px-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+            <div class="flex items-center gap-2"><span class="legend-dot bg-blue-200"></span> 辞書に登録済み</div>
+            <div class="flex items-center gap-2"><span class="legend-dot bg-amber-200"></span> 形態素から推測</div>
+            <div class="flex items-center gap-2"><span class="legend-dot bg-red-200"></span> 未知の単語</div>
+        </div>
+
+        <!-- Results Area -->
+        <section id="results-area" class="hidden">
+
+            <!-- Token Breakdown -->
+            <div class="glass-card rounded-[2.5rem] p-8 shadow-xl shadow-slate-100/50 mb-8 result-animate">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="w-2 h-6 bg-emerald-500 rounded-full"></span>
+                    <h2 class="text-sm font-black uppercase tracking-widest text-slate-500">解析結果</h2>
+                </div>
+                <div id="token-display" class="flex flex-wrap items-end gap-1 mb-8"></div>
+
+                <div class="border-t border-slate-100 pt-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="w-2 h-6 bg-orange-400 rounded-full"></span>
+                        <h3 class="text-sm font-black uppercase tracking-widest text-slate-500">日本語訳</h3>
+                    </div>
+                    <p id="translation-output" class="text-xl font-bold text-slate-800 leading-relaxed"></p>
+                </div>
+            </div>
+
+            <!-- Phrase Hint -->
+            <div id="phrase-hint" class="hidden glass-card rounded-[2.5rem] p-6 shadow-lg shadow-emerald-100/30 mb-8 result-animate border-emerald-200">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="w-2 h-6 bg-emerald-500 rounded-full"></span>
+                    <h3 class="text-sm font-black uppercase tracking-widest text-emerald-600">💡 フレーズ参照</h3>
+                </div>
+                <p class="text-xs text-slate-500 mb-2">この入力に一致する登録フレーズがあります（参考情報）：</p>
+                <p id="phrase-hint-text" class="text-sm font-bold text-emerald-700"></p>
+            </div>
+
+            <!-- Word-by-word detail table -->
+            <div class="glass-card rounded-[2.5rem] p-8 shadow-xl shadow-slate-100/50 result-animate">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="w-2 h-6 bg-violet-500 rounded-full"></span>
+                    <h2 class="text-sm font-black uppercase tracking-widest text-slate-500">詳細分解</h2>
+                </div>
+                <div id="detail-table" class="space-y-3"></div>
+            </div>
+        </section>
+
+        <!-- Example Sentences -->
+        <section class="mt-16">
+            <div class="flex items-center gap-3 mb-8">
+                <span class="w-2 h-6 bg-rose-400 rounded-full"></span>
+                <h2 class="text-sm font-black uppercase tracking-widest text-slate-500">サンプル文</h2>
+            </div>
+            <div class="grid md:grid-cols-2 gap-4" id="examples-grid"></div>
+        </section>
+    </main>
+
+    <script src="vocabulary.js"></script>
+    <script>
+        // Build lookup dictionary from vocabulary data
+        // Exclude phrases category — those are for reference only, not word lookup
+        const vocab = VOCABULARY_DATA;
+        const wordMap = new Map();
+        const phraseList = []; // For reference hints only
+
+        Object.entries(vocab).forEach(([cat, list]) => {
+            list.forEach(item => {
+                const key = item.k.trim();
+                if (cat === 'phrases') {
+                    phraseList.push({ k: key, m: item.m });
+                } else {
+                    if (!wordMap.has(key)) wordMap.set(key, item.m);
+                }
+            });
+        });
+
+        // Build searchTerms for longest-match scanning (same structure as anvum.html)
+        const searchTerms = [];
+
+        // Add all dictionary entries with category tagging
+        const wordCategory = new Map(); // key → category name
+        Object.entries(vocab).forEach(([cat, list]) => {
+            if (cat === 'phrases') return;
+            list.forEach(item => {
+                const key = item.k.trim();
+                searchTerms.push({ k: key, m: item.m, source: 'dictionary' });
+                if (!wordCategory.has(key)) wordCategory.set(key, cat);
+            });
+        });
+
+        // Add individual byam characters
+        const byamChars = [
+            { k: "!a", m: "ア゛" }, { k: "e", m: "エ" }, { k: "u", m: "ウ" }, { k: "wo", m: "ヲ" },
+            { k: "i", m: "イ" }, { k: "yu", m: "ユ" }, { k: "r", m: "R" }, { k: "b", m: "B" },
+            { k: "g", m: "G" }, { k: "p", m: "P" }, { k: "bya", m: "ビャ" }, { k: "m", m: "M" },
+            { k: "n", m: "ン" }, { k: "z", m: "Z" }, { k: "sye", m: "シェ" }, { k: "ge", m: "ゲ" },
+            { k: "t", m: "T" }, { k: "h", m: "H" }, { k: "-", m: "-" }
+        ];
+        byamChars.forEach(b => {
+            searchTerms.push({ k: b.k, m: b.m, source: 'char' });
+        });
+
+        // Sort by key length descending for longest-match-first
+        searchTerms.sort((a, b) => b.k.length - a.k.length);
+
+        // ─── Core Functions ───
+        function translateOnva() {
+            const input = document.getElementById('onva-input').value.trim();
+            if (!input) {
+                document.getElementById('results-area').classList.add('hidden');
+                return;
+            }
+
+            document.getElementById('results-area').classList.remove('hidden');
+
+            const tokens = tokenize(input);
+            renderTokens(tokens);
+            renderTranslation(tokens);
+            renderDetailTable(tokens);
+            checkPhraseHint(input);
+        }
+
+        function tokenize(input) {
+            const words = input.split(/\s+/);
+            return words.map(word => {
+                const directMeaning = lookupWord(word);
+                if (directMeaning) {
+                    return { type: 'known', raw: word, meaning: directMeaning };
+                }
+                const morphemes = longestMatchScan(word);
+                if (morphemes.length > 0) {
+                    const dictHits = morphemes.filter(m => m.source === 'dictionary');
+                    if (dictHits.length > 0) {
+                        return { type: 'morpheme', raw: word, meaning: null, morphemes };
+                    }
+                }
+                return { type: 'unknown', raw: word, meaning: null, morphemes };
+            });
+        }
+
+        function longestMatchScan(word) {
+            const results = [];
+            let idx = 0;
+            while (idx < word.length) {
+                let matched = false;
+                for (const term of searchTerms) {
+                    if (word.startsWith(term.k, idx)) {
+                        results.push({ raw: term.k, meaning: term.m, source: term.source });
+                        idx += term.k.length;
+                        matched = true;
+                        break;
+                    }
+                }
+                if (!matched) idx++;
+            }
+            return results;
+        }
+
+        function checkPhraseHint(input) {
+            const hintEl = document.getElementById('phrase-hint');
+            const hintText = document.getElementById('phrase-hint-text');
+            const normalized = input.toLowerCase().trim();
+            const match = phraseList.find(p => p.k.toLowerCase().trim() === normalized);
+            if (match) { hintEl.classList.remove('hidden'); hintText.textContent = match.m; }
+            else { hintEl.classList.add('hidden'); }
+        }
+
+        function lookupWord(word) {
+            const normalized = word.toLowerCase().trim();
+            if (wordMap.has(normalized)) return wordMap.get(normalized);
+            const cleaned = normalized.replace(/[?.!。？！]+$/, '');
+            if (wordMap.has(cleaned)) return wordMap.get(cleaned);
+            return null;
+        }
+
+        function renderTokens(tokens) {
+            const container = document.getElementById('token-display');
+            container.innerHTML = '';
+            tokens.forEach(token => {
+                const el = document.createElement('span');
+                if (token.type === 'known') {
+                    el.className = 'token-known';
+                    el.innerHTML = `<span class="onva text-lg">${token.raw}</span><span class="text-[9px] font-mono text-slate-400 uppercase mt-1">${token.raw}</span><span class="text-[10px] font-bold text-blue-600 mt-1">${token.meaning}</span>`;
+                } else if (token.type === 'morpheme') {
+                    el.className = 'token-known';
+                    el.style.background = '#fffbeb';
+                    el.style.borderColor = '#fde68a';
+                    const info = token.morphemes.filter(m=>m.source==='dictionary').map(m => extractMeaning(m.meaning)).join('+');
+                    el.innerHTML = `<span class="onva text-lg">${token.raw}</span><span class="text-[9px] font-mono text-slate-400 uppercase mt-1">${token.raw}</span><span class="text-[10px] font-bold text-amber-600 mt-1">${info}</span>`;
+                } else {
+                    el.className = 'token-unknown';
+                    el.innerHTML = `<span class="onva text-lg">${token.raw}</span><span class="text-[9px] font-mono text-slate-400 uppercase mt-1">${token.raw}</span><span class="text-[10px] font-bold text-rose-500 mt-1">???</span>`;
+                }
+                container.appendChild(el);
+            });
+            if (typeof window.renderOnva === 'function') window.renderOnva();
+        }
+
+
+        const numberValues = {
+            'n-!a': 0, 't-i': 1, 'p-u': 2, 'r-e': 3, 'z-h': 4,
+            'm-!a': 5, 'ge-t': 6, 'yu-i': 7, 'h-t': 8, 'n-wo': 9,
+            'wo-t': 10, 't-wo': 100, 'wo-t!a': 1000
+        };
+        const digitKeys = new Set(['n-!a','t-i','p-u','r-e','z-h','m-!a','ge-t','yu-i','h-t','n-wo']);
+        const placeKeys = new Set(['wo-t','t-wo','wo-t!a']);
+
+        function getNumericValue(key) {
+            if (key in numberValues) return numberValues[key];
+            return null;
+        }
+
+        /**
+         * Evaluate a sequence of number morphemes into a single number.
+         * Rules: digit followed by place → digit × place, otherwise add.
+         * Example: [p-u(2), wo-t(10)] → 20; [n-wo(9), t-wo(100)] → 900
+         */
+        function evaluateNumberMorphemes(morphemes) {
+            let total = 0;
+            let i = 0;
+            while (i < morphemes.length) {
+                const val = getNumericValue(morphemes[i].raw);
+                if (val === null) { i++; continue; }
+
+                if (digitKeys.has(morphemes[i].raw) && i + 1 < morphemes.length && placeKeys.has(morphemes[i+1].raw)) {
+                    // digit × place
+                    total += val * numberValues[morphemes[i+1].raw];
+                    i += 2;
+                } else if (placeKeys.has(morphemes[i].raw) && (i === 0 || !digitKeys.has(morphemes[i-1]?.raw))) {
+                    // standalone place (e.g. wo-t alone = 10)
+                    total += val;
+                    i++;
+                } else {
+                    total += val;
+                    i++;
+                }
+            }
+            return total;
+        }
+
+        /**
+         * Get the numeric value of a token (if it represents a number).
+         * Works for both 'known' and 'morpheme' type tokens.
+         */
+        function getTokenNumericValue(token) {
+            // Direct known number
+            if (token.type === 'known' && getNumericValue(token.raw) !== null) {
+                return getNumericValue(token.raw);
+            }
+            // Morpheme compound number (like n-wot-wo → n-wo + t-wo)
+            if (token.type === 'morpheme' && token.morphemes) {
+                const dictMorphemes = token.morphemes.filter(m => m.source === 'dictionary');
+                if (dictMorphemes.length > 0) {
+                    // Check if all are numeric OR all are numeric except the last one if it's a count suffix
+                    const isAllNumeric = dictMorphemes.every(m => getNumericValue(m.raw) !== null);
+                    if (isAllNumeric) {
+                        return evaluateNumberMorphemes(dictMorphemes);
+                    }
+                    
+                    if (dictMorphemes.length > 1) {
+                        const allButLastNumeric = dictMorphemes.slice(0, -1).every(m => getNumericValue(m.raw) !== null);
+                        const lastIsSuffix = countSuffixKeys.has(dictMorphemes[dictMorphemes.length - 1].raw);
+                        if (allButLastNumeric && lastIsSuffix) {
+                            return evaluateNumberMorphemes(dictMorphemes.slice(0, -1));
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        // ─── Word Type Classification ───
+        const negationKeys = new Set(['n']);
+        const verbKeys = new Set();
+        const convKeys = new Set();
+        const copulaKeys = new Set(['t-t']);
+        const connectorKeys = new Set(['t-tr']);
+        const passiveKeys = new Set(['ep']);
+        const pastKeys = new Set(['p']);
+        const countSuffixKeys = new Set(['bya']);
+
+        (vocab.verbs || []).forEach(v => verbKeys.add(v.k.trim()));
+        (vocab.conv || []).forEach(v => convKeys.add(v.k.trim()));
+
+        function isCountToken(token) {
+            // A count token is a morpheme compound where all but the last part are numeric
+            // and the last part is a count suffix (bya)
+            if (token.type !== 'morpheme' || !token.morphemes) return false;
+            const dictParts = token.morphemes.filter(m => m.source === 'dictionary');
+            if (dictParts.length < 2) return false;
+            const allButLastNumeric = dictParts.slice(0, -1).every(m => getNumericValue(m.raw) !== null);
+            const lastIsSuffix = countSuffixKeys.has(dictParts[dictParts.length - 1].raw);
+            return allButLastNumeric && lastIsSuffix;
+        }
+
+        function getWordType(token) {
+            const key = token.raw;
+            if (isCountToken(token)) return 'count'; // e.g. p-u-bya = 2回
+            if (getTokenNumericValue(token) !== null) return 'number';
+            if (copulaKeys.has(key)) return 'copula';
+            if (connectorKeys.has(key)) return 'connector';
+            if (negationKeys.has(key)) return 'negation';
+            if (passiveKeys.has(key)) return 'passive';
+            if (pastKeys.has(key)) return 'past';
+            if (verbKeys.has(key)) return 'verb';
+            if (convKeys.has(key)) return 'greeting';
+
+            // Identify compound verbs (e.g. m-i-ep, !anbya-zp)
+            if (token.morphemes) {
+                const dictParts = token.morphemes.filter(m => m.source === 'dictionary');
+                if (dictParts.length > 0) {
+                    const lastPart = dictParts[dictParts.length - 1];
+                    if (lastPart.raw === 'ep' || lastPart.raw === 'p' || verbKeys.has(lastPart.raw)) {
+                        return 'verb';
+                    }
+                }
+            }
+
+            return 'noun'; // default
+        }
+
+        /**
+         * Extract the most meaningful translation from a meaning string.
+         * Format patterns:
+         *   "カタカナ（実際の意味/別名）" → "実際の意味"  (prefer inside parens)
+         *   "意味/別名" → "意味"  (no parens: take first)
+         *   "そのまま" → "そのまま"
+         */
+        function extractMeaning(meaningStr) {
+            const parenMatch = meaningStr.match(/（(.+?)）/);
+            if (parenMatch) {
+                return parenMatch[1].split('/')[0].trim();
+            }
+            return meaningStr.split('（')[0].split('/')[0].trim();
+        }
+
+        function conjugatePassive(verb) {
+            if (verb.endsWith('む')) return verb.slice(0, -1) + 'まれる';
+            if (verb.endsWith('る')) return verb.slice(0, -1) + 'られる';
+            if (verb.endsWith('す')) return verb.slice(0, -1) + 'される';
+            if (verb.endsWith('う')) return verb.slice(0, -1) + 'われる';
+            if (verb.endsWith('く')) return verb.slice(0, -1) + 'かれる';
+            if (verb.endsWith('ぐ')) return verb.slice(0, -1) + 'がれる';
+            return verb + 'られる';
+        }
+
+        function conjugatePast(verb) {
+            if (verb.endsWith('む')) return verb.slice(0, -1) + 'んだ';
+            if (verb.endsWith('る')) return verb.slice(0, -1) + 'た';
+            if (verb.endsWith('す')) return verb.slice(0, -1) + 'した';
+            if (verb.endsWith('う')) return verb.slice(0, -1) + 'った';
+            if (verb.endsWith('く')) return verb.slice(0, -1) + 'いた';
+            if (verb.endsWith('ぐ')) return verb.slice(0, -1) + 'いだ';
+            if (verb.endsWith('れる')) return verb.slice(0, -2) + 'れた';
+            if (verb.endsWith('られる')) return verb.slice(0, -3) + 'られた';
+            if (verb.endsWith('される')) return verb.slice(0, -3) + 'された';
+            if (verb === '建国') return '建国された';
+            return verb + 'した';
+        }
+
+        function getMeaning(token) {
+            if (token.meaning) return extractMeaning(token.meaning);
+            if (token.morphemes) {
+                const dictParts = token.morphemes.filter(m => m.source === 'dictionary');
+                if (dictParts.length > 0) {
+                    // Check if it starts with numeric sequence
+                    const numericPrefix = [];
+                    let i = 0;
+                    while (i < dictParts.length && getNumericValue(dictParts[i].raw) !== null) {
+                        numericPrefix.push(dictParts[i]);
+                        i++;
+                    }
+
+                    if (numericPrefix.length > 0) {
+                        const numValue = evaluateNumberMorphemes(numericPrefix);
+                        let result = numValue.toString();
+                        
+                        // If followed by bya, it's a count
+                        if (i < dictParts.length && countSuffixKeys.has(dictParts[i].raw)) {
+                            result += "回";
+                            i++;
+                        }
+
+                        // Handle trailing conjugations if any (rare but for completeness)
+                        for (; i < dictParts.length; i++) {
+                            const m = dictParts[i];
+                            const mMeaning = extractMeaning(m.meaning);
+                            if (m.raw === 'ep') {
+                                result = conjugatePassive(result);
+                            } else if (m.raw === 'p') {
+                                result = conjugatePast(result);
+                            } else {
+                                result += '+' + mMeaning;
+                            }
+                        }
+                        return result;
+                    }
+
+                    // Standard morpheme join
+                    let result = extractMeaning(dictParts[0].meaning);
+                    for (let i = 1; i < dictParts.length; i++) {
+                        const m = dictParts[i];
+                        const mMeaning = extractMeaning(m.meaning);
+                        if (m.raw === 'ep') {
+                            result = conjugatePassive(result);
+                        } else if (m.raw === 'p') {
+                            result = conjugatePast(result);
+                        } else {
+                            result += '+' + mMeaning;
+                        }
+                    }
+                    return result;
+                }
+            }
+            return null;
+        }
+
+        // ─── Smooth Translation ───
+        function renderTranslation(tokens) {
+            const output = document.getElementById('translation-output');
+
+            // Phase 1: Classify tokens and compute numbers
+            const classified = tokens.map(token => ({
+                token,
+                type: getWordType(token),
+                numVal: getTokenNumericValue(token),
+                meaning: getMeaning(token)
+            }));
+
+            // Phase 2: Merge consecutive regular numbers (not counts)
+            const merged = [];
+            let i = 0;
+            while (i < classified.length) {
+                if (classified[i].type === 'number') {
+                    let total = 0;
+                    let numStart = i;
+                    while (i < classified.length && classified[i].type === 'number') {
+                        total += classified[i].numVal;
+                        i++;
+                    }
+                    merged.push({ type: 'number', meaning: total.toString(), raw: classified.slice(numStart, i).map(c => c.token.raw).join(' ') });
+                } else {
+                    // count type: pass through as-is (already resolved in meaning)
+                    merged.push(classified[i]);
+                    i++;
+                }
+            }
+
+            // Phase 2b: Merge standalone verb + following past/passive tokens
+            const merged2 = [];
+            for (let j = 0; j < merged.length; j++) {
+                if (merged[j].type === 'verb' && j + 1 < merged.length && merged[j + 1].type === 'past') {
+                    merged2.push({
+                        type: 'verb',
+                        meaning: conjugatePast(merged[j].meaning),
+                        raw: (merged[j].raw || merged[j].token?.raw) + ' p'
+                    });
+                    j++; // skip the standalone past token
+                } else if (merged[j].type === 'verb' && j + 1 < merged.length && merged[j + 1].type === 'passive') {
+                    merged2.push({
+                        type: 'verb',
+                        meaning: conjugatePassive(merged[j].meaning),
+                        raw: (merged[j].raw || merged[j].token?.raw) + ' ep'
+                    });
+                    j++; // skip the standalone passive token
+                } else {
+                    merged2.push(merged[j]);
+                }
+            }
+
+            // Phase 3: Build smooth Japanese with particles
+            const parts = [];
+            let subjectAssigned = false; // Track if は has been used
+            for (let j = 0; j < merged2.length; j++) {
+                const cur = merged2[j];
+                const next = merged2[j + 1] || null;
+                const prev = merged2[j - 1] || null;
+
+                let text = cur.meaning || `[${cur.raw || cur.token?.raw}]`;
+
+                // Handle negation: ない
+                if (cur.type === 'negation') {
+                    text = 'ない';
+                }
+
+                // Handle copula: は...です
+                if (cur.type === 'copula') {
+                    text = 'は';
+                }
+
+                // Handle passive
+                if (cur.type === 'passive') {
+                    text = 'られる';
+                }
+
+                // Handle past
+                if (cur.type === 'past') {
+                    text = 'た';
+                }
+
+                // Handle connector
+                if (cur.type === 'connector') {
+                    text = 'そのため';
+                }
+
+                // Handle greeting: append 、
+                if (cur.type === 'greeting' && next) {
+                    parts.push(text + '、');
+                    continue;
+                }
+
+                // Add particle between current and next
+                if (next) {
+                    const nt = next.type;
+
+                    if (cur.type === 'noun' && nt === 'noun') {
+                        text += 'の';
+                    } else if (cur.type === 'noun' && nt === 'negation') {
+                        text += 'の';
+                    } else if (cur.type === 'noun' && nt === 'verb') {
+                        // SVO: noun before verb = subject → は (first noun only)
+                        if (!subjectAssigned) {
+                            text += 'は';
+                            subjectAssigned = true;
+                        } else {
+                            text += 'を';
+                        }
+                    } else if (cur.type === 'noun' && nt === 'copula') {
+                        // noun は → copula will provide は
+                    } else if (cur.type === 'number' && nt === 'noun') {
+                        text += 'の';
+                    } else if (cur.type === 'copula' && nt === 'noun') {
+                        // は + noun → nothing extra
+                    } else if (cur.type === 'negation' && nt === 'number') {
+                        text += '　';
+                    } else if (cur.type === 'negation' && nt === 'count') {
+                        text += '　';
+                    } else if (cur.type === 'verb' && nt === 'noun') {
+                        // Verb directly before noun = compound noun-verb (e.g. 求める言葉)
+                        // → no space needed in Japanese
+                    } else if (cur.type === 'noun' && nt === 'number') {
+                        text += '　';
+                    } else if (cur.type === 'noun' && nt === 'count') {
+                        text += '　';
+                    } else if (cur.type === 'number' && nt === 'verb') {
+                        // Ordinal number + verb → の
+                        text += 'の';
+                    } else if (cur.type === 'count' && nt === 'verb') {
+                        // Count (～回) + verb → directly (2回作る)
+                    } else if (cur.type === 'count' && nt === 'noun') {
+                        text += 'の';
+                    } else if (cur.type === 'verb' && nt === 'passive') {
+                        // verb + passive → glue
+                    } else if (cur.type === 'verb' && nt === 'past') {
+                        // verb + past → glue
+                    } else if (cur.type === 'passive' && nt === 'noun') {
+                        text += '　';
+                    } else if (cur.type === 'past' && nt === 'noun') {
+                        text += '　';
+                    }
+                }
+
+                parts.push(text);
+            }
+
+            output.textContent = parts.join('');
+        }
+
+        function renderDetailTable(tokens) {
+            const container = document.getElementById('detail-table');
+            container.innerHTML = '';
+
+            tokens.forEach((token, i) => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center gap-4 p-4 bg-white rounded-2xl border border-slate-100';
+                row.style.animationDelay = `${i * 50}ms`;
+
+                const num = document.createElement('div');
+                num.className = 'text-[10px] font-black text-slate-300 w-6 text-center shrink-0';
+                num.textContent = i + 1;
+
+                const onvaCol = document.createElement('div');
+                onvaCol.className = 'onva text-xl shrink-0 min-w-[80px]';
+                onvaCol.textContent = token.raw;
+
+                const spellCol = document.createElement('div');
+                spellCol.className = 'text-xs font-mono text-slate-400 uppercase min-w-[100px]';
+                spellCol.textContent = token.raw;
+
+                const typeCol = document.createElement('div');
+                typeCol.className = 'shrink-0';
+                const typeColors = {
+                    known: 'bg-blue-100 text-blue-600',
+                    morpheme: 'bg-amber-100 text-amber-600',
+                    unknown: 'bg-red-100 text-red-600'
+                };
+                const typeLabels = {
+                    known: '辞書',
+                    morpheme: '分解',
+                    unknown: '未知'
+                };
+                typeCol.innerHTML = `<span class="px-3 py-1 rounded-full text-[9px] font-black uppercase ${typeColors[token.type] || typeColors.unknown}">${typeLabels[token.type] || token.type}</span>`;
+
+                const meaningCol = document.createElement('div');
+                meaningCol.className = 'text-sm font-bold text-slate-700 flex-grow text-right';
+                if (token.meaning) {
+                    meaningCol.textContent = token.meaning;
+                } else if (token.morphemes && token.morphemes.length > 0) {
+                    // Show only dictionary-source morphemes as colored badges
+                    const dictMorphemes = token.morphemes.filter(m => m.source === 'dictionary');
+                    meaningCol.innerHTML = dictMorphemes.map(m =>
+                        `<span class="inline-block px-2 py-1 bg-amber-50 text-amber-700 rounded-lg text-[10px] font-bold mr-1">${m.raw} = ${m.meaning}</span>`
+                    ).join('');
+                } else {
+                    meaningCol.textContent = '不明';
+                }
+
+                row.append(num, onvaCol, spellCol, typeCol, meaningCol);
+                container.appendChild(row);
+            });
+
+            if (typeof window.renderOnva === 'function') window.renderOnva();
+        }
+
+        // Live byam preview + real-time translation (debounced)
+        let translateDebounceTimer = null;
+        document.getElementById('onva-input').addEventListener('input', (e) => {
+            const preview = document.getElementById('live-preview');
+            preview.innerHTML = e.target.value;
+            delete preview.dataset.processed;
+            if (typeof window.renderOnva === 'function') window.renderOnva();
+
+            // Real-time translation with 300ms debounce
+            clearTimeout(translateDebounceTimer);
+            translateDebounceTimer = setTimeout(() => {
+                translateOnva();
+            }, 300);
+        });
+
+        // Enter key to translate
+        document.getElementById('onva-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                translateOnva();
+            }
+        });
+
+        // Render example sentences
+        function renderExamples() {
+            const grid = document.getElementById('examples-grid');
+            const phrases = vocab.phrases || [];
+            phrases.forEach(phrase => {
+                const card = document.createElement('button');
+                card.className = 'text-left p-6 bg-white border border-slate-100 rounded-[2rem] hover:border-blue-300 hover:shadow-lg transition-all group';
+                card.onclick = () => {
+                    document.getElementById('onva-input').value = phrase.k;
+                    const preview = document.getElementById('live-preview');
+                    preview.innerHTML = phrase.k;
+                    delete preview.dataset.processed;
+                    if (typeof window.renderOnva === 'function') window.renderOnva();
+                    translateOnva();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                };
+                card.innerHTML = `
+                    <div class="onva text-lg text-slate-800 mb-3 group-hover:text-blue-600 transition">${phrase.k}</div>
+                    <div class="text-[9px] font-mono text-slate-400 uppercase mb-2">${phrase.k}</div>
+                    <div class="text-xs font-bold text-slate-500 leading-relaxed">${phrase.m}</div>
+                `;
+                grid.appendChild(card);
+            });
+            if (typeof window.renderOnva === 'function') window.renderOnva();
+        }
+
+        window.addEventListener('load', renderExamples);
+    </script>
+</body>
+
+</html>
