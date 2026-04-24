@@ -1,7 +1,6 @@
 (function () {
     const BASE_URL = "https://ec2045.github.io/byam_letters/";
     const WHITE_BASE_URL = "https://ec2045.github.io/byam_letters/white_letters/";
-
     // 文字データ定義
     const onvaData = [
         { key: "!a", label: "ア゛", ext: "png" },
