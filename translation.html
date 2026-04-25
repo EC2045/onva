@@ -82,8 +82,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .result-animate {
@@ -177,7 +184,8 @@
             </div>
 
             <!-- Phrase Hint -->
-            <div id="phrase-hint" class="hidden glass-card rounded-[2.5rem] p-6 shadow-lg shadow-emerald-100/30 mb-8 result-animate border-emerald-200">
+            <div id="phrase-hint"
+                class="hidden glass-card rounded-[2.5rem] p-6 shadow-lg shadow-emerald-100/30 mb-8 result-animate border-emerald-200">
                 <div class="flex items-center gap-3 mb-3">
                     <span class="w-2 h-6 bg-emerald-500 rounded-full"></span>
                     <h3 class="text-sm font-black uppercase tracking-widest text-emerald-600">💡 フレーズ参照</h3>
@@ -299,14 +307,14 @@
                     const next = tokens[i + 1];
                     const nextCat = getCategory(next);
                     if (nextCat === 'nouns' || next.type === 'morpheme') {
-                        lines.push(`[形容詞+名詞] ${getMeaning(t)} + ${getMeaning(next)} → 「${getMeaning(t).replace(/\[形容詞\]\s*/,'')}な${getMeaning(next).replace(/\[[^\]]+\]\s*/,'')}」`);
+                        lines.push(`[形容詞+名詞] ${getMeaning(t)} + ${getMeaning(next)} → 「${getMeaning(t).replace(/\[形容詞\]\s*/, '')}な${getMeaning(next).replace(/\[[^\]]+\]\s*/, '')}」`);
                         i += 2; continue;
                     }
                 }
 
                 // (3) 同じ単語の繰り返し検出
                 if (i + 1 < tokens.length && tokens[i + 1].raw === t.raw) {
-                    lines.push(`[繰り返し→強調] ${getMeaning(t)} × 2 → 「一${getMeaning(t).replace(/\[.*?\]\s*/,'').split('/')[0]}ずつ」または「${getMeaning(t).replace(/\[.*?\]\s*/,'').split('/')[0]}一つ一つ」`);
+                    lines.push(`[繰り返し→強調] ${getMeaning(t)} × 2 → 「一${getMeaning(t).replace(/\[.*?\]\s*/, '').split('/')[0]}ずつ」または「${getMeaning(t).replace(/\[.*?\]\s*/, '').split('/')[0]}一つ一つ」`);
                     i += 2; continue;
                 }
 
@@ -325,10 +333,10 @@
 
             // Try Gemini API first for natural translation
             try {
-                const response = await fetch('http://onvaapi.tadoris-e.com/translate', {
+                const response = await fetch('https://onvaapi.tadoris-e.com/translate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
+                    body: JSON.stringify({
                         text: promptContext,
                         original: input
                     })
@@ -415,7 +423,7 @@
                     el.className = 'token-known';
                     el.style.background = '#fffbeb';
                     el.style.borderColor = '#fde68a';
-                    const info = token.morphemes.filter(m=>m.source==='dictionary').map(m => extractMeaning(m.meaning)).join('+');
+                    const info = token.morphemes.filter(m => m.source === 'dictionary').map(m => extractMeaning(m.meaning)).join('+');
                     el.innerHTML = `<span class="onva text-lg">${token.raw}</span><span class="text-[9px] font-mono text-slate-400 uppercase mt-1">${token.raw}</span><span class="text-[10px] font-bold text-amber-600 mt-1">${info}</span>`;
                 } else {
                     el.className = 'token-unknown';
@@ -432,8 +440,8 @@
             'm-!a': 5, 'f-t': 6, 'yu-i': 7, 'h-t': 8, 'n-wo': 9,
             'wo-t': 10, 't-wo': 100, 'wo-t!a': 1000
         };
-        const digitKeys = new Set(['n-!a','t-i','p-u','r-e','z-h','m-!a','f-t','yu-i','h-t','n-wo']);
-        const placeKeys = new Set(['wo-t','t-wo','wo-t!a']);
+        const digitKeys = new Set(['n-!a', 't-i', 'p-u', 'r-e', 'z-h', 'm-!a', 'f-t', 'yu-i', 'h-t', 'n-wo']);
+        const placeKeys = new Set(['wo-t', 't-wo', 'wo-t!a']);
 
         function getNumericValue(key) {
             if (key in numberValues) return numberValues[key];
@@ -452,11 +460,11 @@
                 const val = getNumericValue(morphemes[i].raw);
                 if (val === null) { i++; continue; }
 
-                if (digitKeys.has(morphemes[i].raw) && i + 1 < morphemes.length && placeKeys.has(morphemes[i+1].raw)) {
+                if (digitKeys.has(morphemes[i].raw) && i + 1 < morphemes.length && placeKeys.has(morphemes[i + 1].raw)) {
                     // digit × place
-                    total += val * numberValues[morphemes[i+1].raw];
+                    total += val * numberValues[morphemes[i + 1].raw];
                     i += 2;
-                } else if (placeKeys.has(morphemes[i].raw) && (i === 0 || !digitKeys.has(morphemes[i-1]?.raw))) {
+                } else if (placeKeys.has(morphemes[i].raw) && (i === 0 || !digitKeys.has(morphemes[i - 1]?.raw))) {
                     // standalone place (e.g. wo-t alone = 10)
                     total += val;
                     i++;
@@ -486,7 +494,7 @@
                     if (isAllNumeric) {
                         return evaluateNumberMorphemes(dictMorphemes);
                     }
-                    
+
                     if (dictMorphemes.length > 1) {
                         const allButLastNumeric = dictMorphemes.slice(0, -1).every(m => getNumericValue(m.raw) !== null);
                         const lastIsSuffix = countSuffixKeys.has(dictMorphemes[dictMorphemes.length - 1].raw);
@@ -604,7 +612,7 @@
                     if (numericPrefix.length > 0) {
                         const numValue = evaluateNumberMorphemes(numericPrefix);
                         let result = numValue.toString();
-                        
+
                         // If followed by bya, it's a count
                         if (i < dictParts.length && countSuffixKeys.has(dictParts[i].raw)) {
                             result += "回";
