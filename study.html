@@ -5,14 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Study onva - Interactive Learning</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module" src="https://ec2045.github.io/onva/byam.js"></script>
+    <script type="module" src="byam.js?v=conversation2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Noto+Sans+JP:wght@300;400;700&display=swap');
-        @font-face {
-  font-family: '2045alphabet';
-  src: url('https://ec2045.github.io/2045font/2045alphabet.otf') format('opentype');
-  font-display: swap;
-}
+
 
 
         body {
@@ -49,6 +45,7 @@
             box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
         }
     </style>
+    <link rel="stylesheet" href="typography.css?v=conversation2">
 </head>
 <body class="min-h-screen flex flex-col">
 
@@ -70,7 +67,8 @@
     </nav>
 
     <main class="flex-grow pt-32 pb-24 px-6 max-w-5xl mx-auto w-full">
-        
+        <div data-language-slot class="no-print mb-6"></div>
+
         <!-- Mode Selection Menu -->
         <div id="mode-menu" class="grid md:grid-cols-2 lg:grid-cols-5 gap-4 mb-16">
             <button onclick="startMode('char')" class="group p-6 bg-white border border-slate-100 rounded-[2.5rem] text-left hover:border-blue-500 hover:shadow-2xl transition-all flex flex-col justify-between">
@@ -140,7 +138,7 @@
                 <div id="current-mode-label" class="mb-8">
                     <span class="px-4 py-1 bg-slate-900 text-white text-[9px] font-black uppercase tracking-[0.2em] rounded-full">Mode</span>
                 </div>
-                
+
                 <div class="mb-16 min-h-[160px] flex flex-col justify-center items-center">
                     <div id="question-text" class="text-4xl font-black text-slate-900 mb-6 h-12 flex items-center"></div>
                     <div id="question-symbol" class="onva scale-[1.8] py-8 h-32 flex items-center"></div>
@@ -152,7 +150,7 @@
                 <!-- Typing Area (Word & Char Modes) -->
                 <div id="typing-area" class="max-w-xl mx-auto space-y-6">
                     <div class="onva text-4xl h-16 flex justify-center items-center text-blue-500 opacity-50" id="typing-echo"></div>
-                    <input type="text" id="typing-input" autocomplete="off" placeholder="Type answer..." 
+                    <input type="text" id="typing-input" autocomplete="off" placeholder="Type answer..."
                         class="w-full bg-slate-50 border-2 border-slate-100 rounded-[2rem] px-8 py-5 text-2xl font-black text-center text-slate-900 focus:border-blue-500 transition">
                 </div>
 
@@ -170,7 +168,8 @@
         </section>
     </main>
 
-    <script src="vocabulary.js"></script>
+    <script src="vocabulary.js?v=conversation2"></script>
+    <script src="anbyam.js?v=conversation2"></script>
     <script>
         let vocabularyData = VOCABULARY_DATA;
         let allWordsFlat = [];
@@ -185,14 +184,14 @@
             {k: "!a", m: "ア゛"}, {k: "e", m: "エ"}, {k: "u", m: "ウ"}, {k: "wo", m: "ヲ"},
             {k: "i", m: "イ"}, {k: "yu", m: "ユ"}, {k: "r", m: "R"}, {k: "b", m: "B"},
             {k: "g", m: "G"}, {k: "p", m: "P"}, {k: "bya", m: "ビャ"}, {k: "m", m: "M"},
-            {k: "n", m: "ン"}, {k: "z", m: "Z"}, {k: "sye", m: "シェ"}, {k: "ge", m: "ゲ"},
+            {k: "n", m: "ン"}, {k: "z", m: "Z"}, {k: "sye", m: "シェ"}, {k: "f", m: "F"},
             {k: "t", m: "T"}, {k: "h", m: "H"}
         ];
 
         function convertNumberToOnva(num) {
             const numWords = {
                 0: "n-!a", 1: "t-i", 2: "p-u", 3: "r-e", 4: "z-h", 5: "m-!a",
-                6: "ge-t", 7: "yu-i", 8: "h-t", 9: "n-wo", 10: "wo-t",
+                6: "f-t", 7: "yu-i", 8: "h-t", 9: "n-wo", 10: "wo-t",
                 100: "t-wo", 1000: "wo-t!a"
             };
             if (num === 0) return numWords[0];
@@ -219,21 +218,21 @@
             allWordsFlat = [];
             Object.values(vocabularyData).forEach(list => { allWordsFlat = [...allWordsFlat, ...list]; });
             renderTabs();
-            renderCategory('basics');
+            renderCategory('conv');
         }
 
         function startMode(mode) {
             activeMode = mode;
             document.getElementById('mode-menu').classList.add('hidden');
             document.getElementById('quiz-area').classList.remove('hidden');
-            
+
             let mName = '';
             if(mode === 'char') mName = 'byam文字を覚える';
             else if(mode === 'word') mName = '単語を覚える';
             else if(mode === 'read') mName = 'onva語を読む';
             else if(mode === 'num') mName = '数字を覚える';
             else if(mode === 'phrase') mName = 'フレーズを覚える';
-            
+
             document.getElementById('current-mode-label').querySelector('span').textContent = mName;
             generateQuiz();
         }
@@ -281,7 +280,7 @@
                     if (score > 600) max = 9999;
                     else if (score > 300) max = 999;
                     else if (score > 100) max = 99;
-                    
+
                     const rand = Math.floor(Math.random() * (max + 1));
                     currentQuestion = {
                         k: convertNumberToOnva(rand),
@@ -303,7 +302,7 @@
                 textEl.textContent = '';
                 typingArea.classList.add('hidden');
                 optionsGrid.classList.remove('hidden');
-                
+
                 let options = [currentQuestion.m];
                 while(options.length < 4) {
                     let r = allWordsFlat[Math.floor(Math.random() * allWordsFlat.length)].m;
@@ -340,8 +339,8 @@
             const cardEl = document.getElementById('quiz-card');
             const inputEl = document.getElementById('typing-input');
             const echoEl = document.getElementById('typing-echo');
-            
-            if (val.toLowerCase() === currentQuestion.k.toLowerCase()) {
+
+            if (ANBYAM.normalize(val) === ANBYAM.normalize(currentQuestion.k)) {
                 if (!isCorrectionPhase) {
                     score += 10;
                     document.getElementById('score').textContent = score;
@@ -351,10 +350,10 @@
                     msgEl.textContent = "Good correction!";
                     msgEl.className = "mt-8 h-4 text-[10px] font-black uppercase tracking-widest text-blue-500";
                 }
-                
+
                 isCorrectionPhase = false;
                 cardEl.classList.add('correct-anim');
-                
+
                 setTimeout(() => {
                     cardEl.classList.remove('correct-anim');
                     generateQuiz();
@@ -366,12 +365,12 @@
                     }
                     document.getElementById('queue-count').textContent = reviewQueue.length;
                     isCorrectionPhase = true;
-                    
+
                     msgEl.textContent = "Wrong! Answer is: " + currentQuestion.k;
                     msgEl.className = "mt-8 h-4 text-[10px] font-black uppercase tracking-widest text-rose-500 transition-opacity duration-300";
                     inputEl.disabled = true;
                     inputEl.classList.add('opacity-50');
-                    
+
                     setTimeout(() => {
                         msgEl.classList.add('opacity-0');
                         setTimeout(() => {
@@ -379,7 +378,7 @@
                             msgEl.classList.remove('text-rose-500');
                             msgEl.classList.add('text-amber-500');
                             msgEl.classList.remove('opacity-0');
-                            
+
                             inputEl.disabled = false;
                             inputEl.classList.remove('opacity-50');
                             inputEl.value = '';
@@ -392,7 +391,7 @@
                     msgEl.className = "mt-8 h-4 text-[10px] font-black uppercase tracking-widest text-rose-500 transition-opacity duration-300";
                     inputEl.disabled = true;
                     inputEl.classList.add('opacity-50');
-                    
+
                     setTimeout(() => {
                         msgEl.classList.add('opacity-0');
                         setTimeout(() => {
@@ -400,7 +399,7 @@
                             msgEl.classList.remove('text-rose-500');
                             msgEl.classList.add('text-amber-500');
                             msgEl.classList.remove('opacity-0');
-                            
+
                             inputEl.disabled = false;
                             inputEl.classList.remove('opacity-50');
                             inputEl.value = '';
@@ -430,7 +429,7 @@
             const msgEl = document.getElementById('message');
             msgEl.classList.remove('opacity-0');
             const cardEl = document.getElementById('quiz-card');
-            
+
             if (val === currentQuestion.m) {
                 if (!isCorrectionPhase) {
                     score += 10;
@@ -442,10 +441,10 @@
                     msgEl.className = "mt-8 h-4 text-[10px] font-black uppercase tracking-widest text-blue-500";
                 }
                 btn.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-600');
-                
+
                 isCorrectionPhase = false;
                 cardEl.classList.add('correct-anim');
-                
+
                 setTimeout(() => {
                     cardEl.classList.remove('correct-anim');
                     generateQuiz();
@@ -457,12 +456,12 @@
                     }
                     document.getElementById('queue-count').textContent = reviewQueue.length;
                     isCorrectionPhase = true;
-                    
+
                     msgEl.textContent = "Wrong! Answer is: " + currentQuestion.m;
                     msgEl.className = "mt-8 h-4 text-[10px] font-black uppercase tracking-widest text-rose-500 transition-opacity duration-300";
-                    
+
                     document.querySelectorAll('#options-grid button').forEach(b => { b.disabled = true; b.classList.add('opacity-50'); });
-                    
+
                     setTimeout(() => {
                         msgEl.classList.add('opacity-0');
                         setTimeout(() => {
@@ -477,7 +476,7 @@
                     msgEl.textContent = "Still incorrect. Answer is: " + currentQuestion.m;
                     msgEl.className = "mt-8 h-4 text-[10px] font-black uppercase tracking-widest text-rose-500 transition-opacity duration-300";
                     document.querySelectorAll('#options-grid button').forEach(b => { b.disabled = true; b.classList.add('opacity-50'); });
-                    
+
                     setTimeout(() => {
                         msgEl.classList.add('opacity-0');
                         setTimeout(() => {
@@ -494,7 +493,7 @@
 
         document.getElementById('typing-input').addEventListener('input', (e) => {
             const echo = document.getElementById('typing-echo');
-            echo.innerHTML = e.target.value;
+            echo.textContent = e.target.value;
             delete echo.dataset.processed;
             if (window.renderOnva) window.renderOnva();
         });
@@ -530,6 +529,7 @@
 
         window.addEventListener('load', init);
     </script>
+<script defer src="i18n.js?v=conversation2" data-site="onva-learning" data-languages="ja,en"></script>
 </body>
 </html>
 

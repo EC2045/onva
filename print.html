@@ -6,14 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>onva Practice Sheets</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="byam.js"></script>
+    <script src="byam.js?v=conversation2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Noto+Sans+JP:wght@300;400;700&display=swap');
-@font-face {
-  font-family: '2045alphabet';
-  src: url('https://ec2045.github.io/2045font/2045alphabet.otf') format('opentype');
-  font-display: swap;
-}
+
 
         body {
             font-family: 'Noto Sans JP', sans-serif;
@@ -182,6 +178,7 @@
 
         /* .onva-images height is controlled by practice-cell rule now */
     </style>
+    <link rel="stylesheet" href="typography.css?v=conversation2">
 </head>
 
 <body class="min-h-screen pb-20">
@@ -212,6 +209,7 @@
     </nav>
 
     <main class="pt-8 px-4 max-w-[800px] mx-auto print-container">
+        <div data-language-slot class="no-print mb-6"></div>
 
         <!-- Sheet Header -->
         <header class="mb-8 text-center pb-6 border-b-2 border-slate-900">
@@ -267,13 +265,13 @@
 
     </main>
 
-    <script src="vocabulary.js"></script>
+    <script src="vocabulary.js?v=conversation2"></script>
     <script>
         const byams = [
             { k: "!a", r: "ア゛" }, { k: "e", r: "エ" }, { k: "u", r: "ウ" }, { k: "wo", r: "ヲ" },
             { k: "i", r: "イ" }, { k: "yu", r: "ユ" }, { k: "r", r: "R" }, { k: "b", r: "B" },
             { k: "g", r: "G" }, { k: "p", r: "P" }, { k: "bya", r: "ビャ" }, { k: "m", r: "M" },
-            { k: "n", r: "ン" }, { k: "z", r: "Z" }, { k: "sye", r: "シェ" }, { k: "ge", r: "ゲ" },
+            { k: "n", r: "ン" }, { k: "z", r: "Z" }, { k: "sye", r: "シェ" }, { k: "f", r: "F" },
             { k: "t", r: "T" }, { k: "h", r: "H" }
         ];
 
@@ -296,7 +294,7 @@
             { k: "r-e", m: "3" },
             { k: "z-h", m: "4" },
             { k: "m-!a", m: "5" },
-            { k: "ge-t", m: "6" },
+            { k: "f-t", m: "6" },
             { k: "yu-i", m: "7" },
             { k: "h-t", m: "8" },
             { k: "n-wo", m: "9" },
@@ -322,7 +320,7 @@
 
             // Cell width class
             const cellClass = isWord ? 'practice-cell word-cell' : 'practice-cell';
-            
+
             // Ensure at least 3 practice cells (Model, Trace, Write) are generated for words, even if they wrap
             const drawCols = isWord ? Math.max(3, Math.floor(COLS / numSymbols)) : COLS;
 
@@ -385,6 +383,7 @@
             }
         });
     </script>
+<script defer src="i18n.js?v=conversation2" data-site="onva-learning" data-languages="ja,en"></script>
 </body>
 
 </html>

@@ -92,6 +92,7 @@
         }
         attributes.set(element,records);
       });
+      if (window.renderOnva) window.renderOnva();
     } finally {
       observer.observe(document.documentElement,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['placeholder','alt','title','aria-label','content']});
     }
@@ -187,7 +188,7 @@
     mountControls();
     await Promise.all(['ja','en'].map(async language=>{
       try {
-        const response = await fetch(new URL('lang/'+language+'.lang?v=20261102-ui2',script.src));
+        const response = await fetch(new URL('lang/'+language+'.lang?v=conversation2',script.src));
         if(!response.ok)throw new Error('Translations: '+response.status);
         dictionaries[language]=parseLang(await response.text());
       } catch(error){console.warn('[site-i18n]',error);}

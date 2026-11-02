@@ -6,14 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>!anbyam - onva Language Guide</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module" src="https://ec2045.github.io/onva/byam.js"></script>
+    <script type="module" src="byam.js?v=conversation2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Noto+Sans+JP:wght@300;400;700&family=JetBrains+Mono&display=swap');
-@font-face {
-  font-family: '2045alphabet';
-  src: url('https://ec2045.github.io/2045font/2045alphabet.otf') format('opentype');
-  font-display: swap;
-}
+
 
 
         body {
@@ -100,6 +96,7 @@
 
         /* onva-white will be handled natively by byam.js (fetching white SVG/PNG assets) */
     </style>
+    <link rel="stylesheet" href="typography.css?v=conversation2">
 </head>
 
 <body class="bg-slate-50/50">
@@ -121,6 +118,7 @@
     </nav>
 
     <main class="pt-32 pb-24 px-6 max-w-6xl mx-auto">
+        <div data-language-slot class="no-print mb-6"></div>
         <header class="mb-20">
             <h1 class="text-5xl font-bold text-slate-900 mb-6 tracking-tighter">!anbyam</h1>
             <p class="text-xl text-slate-500 max-w-3xl leading-relaxed">
@@ -136,226 +134,7 @@
             </h2>
             <div class="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-9 gap-4" id="alphabet-grid"></div>
         </section>
-        <section class="mb-32">
-            <h2 class="text-2xl font-bold mb-10 flex items-center gap-3">
-                <span class="w-2 h-8 bg-emerald-500 rounded-full"></span>
-                Grammar (文法)
-            </h2>
-            <div class="grid md:grid-cols-3 gap-8">
-
-                <!-- Col 1: SVO + Copula + 疑問文 -->
-                <div class="bg-white rounded-3xl p-8 border border-slate-100 space-y-8">
-
-                    <div>
-                        <h4 class="font-bold text-slate-900 mb-1">① 基本語順: SVO</h4>
-                        <p class="text-xs text-slate-400 mb-3">主語 + 動詞 + 目的語</p>
-                        <div class="space-y-2">
-                            <div class="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-2">
-                                <span class="onva-r text-xl text-slate-800">sye i m</span>
-                                <span class="text-xs text-slate-500">私は水を飲む</span>
-                            </div>
-                            <div class="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-2">
-                                <span class="onva-r text-xl text-slate-800">yu i</span>
-                                <span class="text-xs text-slate-500">あなたが食べる</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr class="border-slate-50">
-
-                    <div>
-                        <h4 class="font-bold text-slate-900 mb-1">② コピュラ (＝)</h4>
-                        <p class="text-xs text-slate-400 mb-3"><code class="bg-slate-100 px-1 rounded font-mono">t-t</code> で「A は B である」</p>
-                        <div class="space-y-2">
-                            <div class="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-2">
-                                <span class="onva-r text-xl text-slate-800">sye t-t !anbyawon</span>
-                                <span class="text-xs text-slate-500">私はonva人だ</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr class="border-slate-50">
-
-                    <div>
-                        <h4 class="font-bold text-slate-900 mb-1">③ 否定: <code class="bg-rose-50 text-rose-600 px-1 rounded font-mono text-base">n-</code></h4>
-                        <p class="text-xs text-slate-400 mb-3">語頭に n- を付ける</p>
-                        <div class="space-y-2">
-                            <div class="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-2">
-                                <span class="onva-r text-xl text-slate-800">n-i</span>
-                                <span class="text-xs text-slate-500">食べない</span>
-                            </div>
-                            <div class="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-2">
-                                <span class="onva-r text-xl text-slate-800">n-n!ag</span>
-                                <span class="text-xs text-slate-500">無駄のない（最適化）</span>
-                            </div>
-                            <div class="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-2">
-                                <span class="onva-r text-xl text-slate-800">n-ti-wor</span>
-                                <span class="text-xs text-slate-500">寝ないこと</span>
-                            </div>
-                        </div>
-                        <p class="text-[10px] text-slate-400 mt-2">※ 接頭辞が重なる場合、n- が最優先</p>
-                    </div>
-                </div>
-
-                <!-- Col 2: 疑問文3パターン + 命令文 -->
-                <div class="bg-white rounded-3xl p-8 border border-slate-100 space-y-8">
-
-                    <div>
-                        <h4 class="font-bold text-slate-900 mb-4">④ 疑問文 (3パターン)</h4>
-
-                        <div class="space-y-4">
-                            <div class="bg-blue-50 rounded-2xl p-4">
-                                <h5 class="text-[10px] font-black uppercase text-blue-600 mb-2 tracking-widest">A. Yes/No疑問文</h5>
-                                <p class="text-xs text-slate-500 mb-3">動詞を文頭に前置する</p>
-                                <div class="space-y-2">
-                                    <div class="flex items-center gap-3">
-                                        <span class="onva-r text-xl">i yu</span>
-                                        <span class="text-xs text-slate-600">食べる？</span>
-                                    </div>
-                                    <div class="flex items-center gap-3">
-                                        <span class="onva-r text-xl">wor won</span>
-                                        <span class="text-xs text-slate-600">彼は寝ている？</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-indigo-50 rounded-2xl p-4">
-                                <h5 class="text-[10px] font-black uppercase text-indigo-600 mb-2 tracking-widest">B. 内容疑問文（誰/何）</h5>
-                                <p class="text-xs text-slate-500 mb-3">不明な箇所に <code class="bg-white px-1 rounded font-mono">wo</code> を置く</p>
-                                <div class="space-y-2">
-                                    <div class="flex items-center gap-3">
-                                        <span class="onva-r text-xl">i wo</span>
-                                        <span class="text-xs text-slate-600">誰が食べる？（主語が不明）</span>
-                                    </div>
-                                    <div class="flex items-center gap-3">
-                                        <span class="onva-r text-xl">sye i wo</span>
-                                        <span class="text-xs text-slate-600">私は何を食べる？（目的語が不明）</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-violet-50 rounded-2xl p-4">
-                                <h5 class="text-[10px] font-black uppercase text-violet-600 mb-2 tracking-widest">C. wh+疑問（動詞前置+wo）</h5>
-                                <p class="text-xs text-slate-500 mb-3">A+Bの組み合わせ</p>
-                                <div class="space-y-2">
-                                    <div class="flex items-center gap-3">
-                                        <span class="onva-r text-xl">wo yu</span>
-                                        <span class="text-xs text-slate-600">あなたは何をする？</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr class="border-slate-50">
-
-                    <div>
-                        <h4 class="font-bold text-slate-900 mb-1">⑤ 命令文</h4>
-                        <p class="text-xs text-slate-400 mb-3">文頭に <code class="bg-slate-100 px-1 rounded font-mono">wo</code> を置く（疑問のwoとは別用途）</p>
-                        <div class="space-y-2 bg-rose-50 rounded-2xl p-4">
-                            <div class="flex items-center gap-3">
-                                <span class="onva-r text-xl">wo i</span>
-                                <span class="text-xs text-slate-600">食べろ！</span>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <span class="onva-r text-xl">wo te</span>
-                                <span class="text-xs text-slate-600">行け！</span>
-                            </div>
-                        </div>
-                        <p class="text-[10px] text-slate-400 mt-2">★「wo + 動詞」が命令。「動詞 + wo」は疑問と区別すること</p>
-                    </div>
-                </div>
-
-                <!-- Col 3: 時制・名詞化・数字・接続詞 -->
-                <div class="bg-white rounded-3xl p-8 border border-slate-100 space-y-8">
-
-                    <div>
-                        <h4 class="font-bold text-slate-900 mb-1">⑥ 時制・受け身・完了</h4>
-                        <div class="space-y-3 mt-3">
-                            <div>
-                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">過去: 動詞 + -p</p>
-                                <div class="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-2">
-                                    <span class="onva-r text-xl">i-p</span>
-                                    <span class="text-xs text-slate-500">食べた</span>
-                                </div>
-                            </div>
-                            <div>
-                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">受け身: 動詞 + -ep</p>
-                                <div class="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-2">
-                                    <span class="onva-r text-xl">i-ep</span>
-                                    <span class="text-xs text-slate-500">食べられる</span>
-                                </div>
-                            </div>
-                            <div>
-                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">完了(直前): 主語 + -!abh</p>
-                                <div class="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-2">
-                                    <span class="onva-r text-xl">sye-!abh i</span>
-                                    <span class="text-xs text-slate-500">たった今食べた</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr class="border-slate-50">
-
-                    <div>
-                        <h4 class="font-bold text-slate-900 mb-1">⑦ 動詞の名詞化: <code class="bg-blue-50 text-blue-600 px-1 rounded font-mono">ti-</code></h4>
-                        <p class="text-xs text-slate-400 mb-3">動詞の前に ti- を付ける</p>
-                        <div class="space-y-2">
-                            <div class="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-2">
-                                <span class="onva-r text-xl">ti-i</span>
-                                <span class="text-xs text-slate-500">食べること</span>
-                            </div>
-                            <div class="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-2">
-                                <span class="onva-r text-xl">ti-te</span>
-                                <span class="text-xs text-slate-500">行くこと</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr class="border-slate-50">
-
-                    <div>
-                        <h4 class="font-bold text-slate-900 mb-1">⑧ 数字・単位</h4>
-                        <p class="text-xs text-slate-400 mb-3">数を並べると掛け算的に合成</p>
-                        <div class="space-y-2">
-                            <div class="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-2">
-                                <span class="onva-r text-xl">p-u wo-t</span>
-                                <span class="text-xs text-slate-500">20 (2×10)</span>
-                            </div>
-                            <div class="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-2">
-                                <span class="onva-r text-xl">p-u wo-t!a</span>
-                                <span class="text-xs text-slate-500">2000 (2×1000)</span>
-                            </div>
-                        </div>
-                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-3 mb-1">時間単位</p>
-                        <div class="flex gap-2 flex-wrap text-xs text-slate-600">
-                            <span class="bg-slate-50 px-2 py-1 rounded-lg"><span class="onva-r">t-m</span> 秒</span>
-                            <span class="bg-slate-50 px-2 py-1 rounded-lg"><span class="onva-r">m-t</span> 分</span>
-                            <span class="bg-slate-50 px-2 py-1 rounded-lg"><span class="onva-r">wo-m</span> 時</span>
-                        </div>
-                    </div>
-
-                    <hr class="border-slate-50">
-
-                    <div>
-                        <h4 class="font-bold text-slate-900 mb-1">⑨ 接続詞・仮定</h4>
-                        <div class="space-y-2">
-                            <div class="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-2">
-                                <span class="onva-r text-xl">t-tr</span>
-                                <span class="text-xs text-slate-500">そのため / だから</span>
-                            </div>
-                            <div class="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-2">
-                                <span class="onva-r text-xl">!abu</span>
-                                <span class="text-xs text-slate-500">もし〜なら（仮定）</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Numeral Converter Tool -->
+        <section id="conversation-grammar" class="grammar-guide mb-32" data-i18n-html="@conversation-grammar"><h2>日常会話の文法 · 改訂2</h2><article class="grammar-card"><h3>表記と文の区切り</h3><p>語の間は空白、語の内部の派生・複合・接辞はハイフン。句読点は保持する。固有名詞は原綴りでもよい。語順は主語＋動詞＋目的語。主語は文脈で明らかな返答だけ省略できる。</p><div class="grammar-example"><span class="onva-r" translate="no">sye m-i m.</span><code translate="no">sye m-i m.</code><span>私は水を飲む。</span></div></article><article class="grammar-card"><h3>名詞・形容詞と「〜だ」</h3><p>名詞・形容詞を述語にするときは t-t を省略しない。形容詞・数量は名詞の前。f-sye／f-yu は「これ／それ」、名詞の後に置くと「この／その」。複数は必要なとき数量や won-r（人々）で示し、名詞に過去の -p を付けない。</p><div class="grammar-example"><span class="onva-r" translate="no">sye t-t !anne-won.</span><code translate="no">sye t-t !anne-won.</code><span>私は学生です。</span></div><div class="grammar-example"><span class="onva-r" translate="no">f-bya f-sye t-t b.</span><code translate="no">f-bya f-sye t-t b.</code><span>この本は良い。</span></div></article><article class="grammar-card"><h3>質問と命令を分ける</h3><p>はい／いいえの疑問は SVO の文末に wo-wo。内容疑問は未知の名詞を wo-f（何）、wo-won（誰）に置換。場所は z-e／te-z wo-z、時点は eti-z wo-eti。なぜ／どうやっては文末の wo-n!ag／wo-ritt。内容疑問に wo-wo は不要。命令だけ文頭に wo、丁寧な依頼は h-b wo。否定命令は wo n-動詞。</p><div class="grammar-example"><span class="onva-r" translate="no">yu i wo-wo?</span><code translate="no">yu i wo-wo?</code><span>食べる？</span></div><div class="grammar-example"><span class="onva-r" translate="no">wo-won i i-z-m?</span><code translate="no">wo-won i i-z-m?</code><span>誰がポテトサラダを食べる？</span></div><div class="grammar-example"><span class="onva-r" translate="no">h-b wo r-r bya f-yu.</span><code translate="no">h-b wo r-r bya f-yu.</code><span>もう一度言ってください。</span></div></article><article class="grammar-card"><h3>否定・時制・進行・完了</h3><p>否定 n- は動詞全体に付ける。接辞順は n-＋語幹＋受け身 -ep＋相 -u または -!abh＋時制 -p または -e。無標は現在・習慣・文脈上の時点、-p は過去、-e は未来、-u は進行、-!abh は完了。相と時制は各1個まで。受け身の -ep は可能を表さない。たった今は動詞前の !abh。まだ〜ないは n-!abh と否定動詞を併用する。</p><div class="grammar-example"><span class="onva-r" translate="no">sye n-i-p i-z-m.</span><code translate="no">sye n-i-p i-z-m.</code><span>私はポテトサラダを食べなかった。</span></div><div class="grammar-example"><span class="onva-r" translate="no">sye i-u i-z-m.</span><code translate="no">sye i-u i-z-m.</code><span>食べているところ。</span></div><div class="grammar-example"><span class="onva-r" translate="no">f-bya ne-ep-p.</span><code translate="no">f-bya ne-ep-p.</code><span>本が見られた。</span></div></article><article class="grammar-card"><h3>欲しい・できる・必要</h3><p>rep は欲しい／求める、h-te はできる、h-n は必要とする。行為を目的語にするには ti- を動詞語幹に付け、後ろの目的語・前置詞句もその行為に含める。ti-句の主語は主節の主語と同じ。別の主語を述べるときは内容節を使う。n-h-te は「できない」、h-te ti-n-動詞は「しないことができる」。</p><div class="grammar-example"><span class="onva-r" translate="no">sye rep m.</span><code translate="no">sye rep m.</code><span>水が欲しい。</span></div><div class="grammar-example"><span class="onva-r" translate="no">sye rep ti-te te-z z-h-won.</span><code translate="no">sye rep ti-te te-z z-h-won.</code><span>家に帰りたい。</span></div><div class="grammar-example"><span class="onva-r" translate="no">sye n-h-te ti-bya !anbyam.</span><code translate="no">sye n-h-te ti-bya !anbyam.</code><span>Anbyamを話せない。</span></div></article><article class="grammar-card"><h3>所有・場所・相手・時点</h3><p>名詞 yu-h 所有者で「所有者の名詞」。前置詞句は目的語の後に置く。z-e 場所、te-z 行き先、ti-z 出発点、yu-e 受け手、eti-z 時点。複数あるときはこの順に並べる。</p><div class="grammar-example"><span class="onva-r" translate="no">sye h f-bya yu-h yu.</span><code translate="no">sye h f-bya yu-h yu.</code><span>あなたの本を持っている。</span></div><div class="grammar-example"><span class="onva-r" translate="no">sye h-yu f-yu yu-e yu.</span><code translate="no">sye h-yu f-yu yu-e yu.</code><span>それをあなたに渡す。</span></div><div class="grammar-example"><span class="onva-r" translate="no">sye te-e te-z z-!anne eti-z eti-e-m.</span><code translate="no">sye te-e te-z z-!anne eti-z eti-e-m.</code><span>明日学校に行く。</span></div></article><article class="grammar-card"><h3>文をつなぐ・考えを伝える</h3><p>A, t-tr B は「AだからB」。!abu A, t-tr B は「もしAならB」。yu-r は「と／そして」、n-p は「でも」。内容節は bya-t と bya-n で必ず囲む。節の中も SVO。入れ子は内側から閉じる。</p><div class="grammar-example"><span class="onva-r" translate="no">sye !ann bya-t won ti-e bya-n.</span><code translate="no">sye !ann bya-t won ti-e bya-n.</code><span>彼が来ると思う。</span></div><div class="grammar-example"><span class="onva-r" translate="no">!abu yu ti, t-tr sye h-yu f-bya yu-e yu.</span><code translate="no">!abu yu ti, t-tr sye h-yu f-bya yu-e yu.</code><span>来たら本を渡す。</span></div></article><article class="grammar-card"><h3>「買った本」のような説明</h3><p>名詞の後に bya-f SVO bya-n を置く。説明対象の役割には wo-f をちょうど1回置く。この節の wo-f は質問ではなく先行する名詞を指す。省略しないので主語・目的語・場所を区別できる。</p><div class="grammar-example"><span class="onva-r" translate="no">f-yu t-t f-bya bya-f sye ne-h-p wo-f bya-n.</span><code translate="no">f-yu t-t f-bya bya-f sye ne-h-p wo-f bya-n.</code><span>それは私が買った本です。</span></div></article><article class="grammar-card"><h3>数字と単位</h3><p>2×10は p-uwo-t のように同じ語に連結し、位ごとは空白で加算する。18は wo-t h-t、20は p-uwo-t。6は辞書どおり f-t に統一する。数量は名詞の前。</p><div class="grammar-example"><span class="onva-r" translate="no">sye h wo-t h-t byam.</span><code translate="no">sye h wo-t h-t byam.</code><span>私は18文字を持つ。</span></div></article><article class="grammar-card"><h3>旧表記からの変更</h3><p>新版では疑問の動詞前置をやめ、wo-wo と具体的な疑問語に統一。wo は命令に限定（形容詞の「広い」は存続）。旧 sye-!abh i は sye !abh i-p、旧 yuiwo は yu i wo-f? に置換。連結していた文は分かち書きし、名詞・形容詞述語の t-t を補う。ti-n-wor は「寝ないこと」、n-ti-wor は「寝ることではない」とし、否定の作用域を区別する。</p></article></section>
         <section class="mb-32">
             <h2 class="text-2xl font-bold mb-10 flex items-center gap-3">
                 <span class="w-2 h-8 bg-orange-500 rounded-full"></span>
@@ -419,57 +198,14 @@
                     <!-- Tabs dynamically injected -->
                 </div>
             </div>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" id="vocab-display">
                 <!-- Dynamically filled -->
             </div>
         </section>
 
         <!-- Phrasebook Section -->
-        <section class="mb-32">
-            <h2 class="text-2xl font-bold mb-10 flex items-center gap-3">
-                <span class="w-2 h-8 bg-orange-500 rounded-full"></span>
-                Phrasebook (例文集)
-            </h2>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="bg-white rounded-3xl p-8 border border-slate-100">
-                    <h3 class="text-orange-500 font-black text-xs uppercase tracking-widest mb-6">Daily</h3>
-                    <div class="space-y-8">
-                        <div>
-                            <div class="onva-r text-3xl mb-2">b-!asye!anbyawon</div>
-                            <div class="text-sm text-slate-500">こんにちは。私はonvaの民です。</div>
-                        </div>
-                        <div>
-                            <div class="onva-r text-3xl mb-2">yuiwo?</div>
-                            <div class="text-sm text-slate-500">あなたは何を食べますか？</div>
-                        </div>
-                        <div>
-                            <div class="onva-r text-3xl mb-2">b-byasyehbe</div>
-                            <div class="text-sm text-slate-500">ありがとう。私は美（心地よさ）を持っています。</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-3xl p-8 border border-slate-100">
-                    <h3 class="text-sky-500 font-black text-xs uppercase tracking-widest mb-6">Technology</h3>
-                    <div class="space-y-8">
-                        <div>
-                            <div class="onva-r text-3xl mb-2">sye h !aiwon</div>
-                            <div class="text-sm text-slate-500">私はiPhoneを持っています。</div>
-                        </div>
-                        <div>
-                            <div class="onva-r text-3xl mb-2">ritt-!abh !ann</div>
-                            <div class="text-sm text-slate-500">AIがたった今、思考を得ました。</div>
-                        </div>
-                        <div>
-                            <div class="onva-r text-3xl mb-2">m-wo-bya b . ritt b</div>
-                            <div class="text-sm text-slate-500">ネットは良好です。AIは良いです。</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- byam Converter Tool -->
+<section class="mb-32"><h2 class="text-2xl font-bold mb-8">Phrasebook (例文集)</h2><div class="conversation-grid"><article class="grammar-card"><div class="onva-r" translate="no">b-!a.</div><code translate="no">b-!a.</code><p>こんにちは。</p></article><article class="grammar-card"><div class="onva-r" translate="no">b-bya.</div><code translate="no">b-bya.</code><p>ありがとう。</p></article><article class="grammar-card"><div class="onva-r" translate="no">n-bya.</div><code translate="no">n-bya.</code><p>ごめんなさい。</p></article><article class="grammar-card"><div class="onva-r" translate="no">sye t-t !anbyawon.</div><code translate="no">sye t-t !anbyawon.</code><p>私はONVA人です。</p></article><article class="grammar-card"><div class="onva-r" translate="no">sye t-t !anne-won.</div><code translate="no">sye t-t !anne-won.</code><p>私は学生です。</p></article><article class="grammar-card"><div class="onva-r" translate="no">yu t-t !anne-won wo-wo?</div><code translate="no">yu t-t !anne-won wo-wo?</code><p>あなたは学生ですか？</p></article><article class="grammar-card"><div class="onva-r" translate="no">f-sye t-t wo-f?</div><code translate="no">f-sye t-t wo-f?</code><p>これは何？</p></article><article class="grammar-card"><div class="onva-r" translate="no">wo-won i i-z-m?</div><code translate="no">wo-won i i-z-m?</code><p>誰がポテトサラダを食べるの？</p></article><article class="grammar-card"><div class="onva-r" translate="no">yu i wo-f?</div><code translate="no">yu i wo-f?</code><p>何を食べるの？</p></article><article class="grammar-card"><div class="onva-r" translate="no">sye m-i m.</div><code translate="no">sye m-i m.</code><p>私は水を飲む。</p></article><article class="grammar-card"><div class="onva-r" translate="no">sye rep m.</div><code translate="no">sye rep m.</code><p>水が欲しい。</p></article><article class="grammar-card"><div class="onva-r" translate="no">sye rep ti-te te-z z-h-won.</div><code translate="no">sye rep ti-te te-z z-h-won.</code><p>家に帰りたい。</p></article><article class="grammar-card"><div class="onva-r" translate="no">sye h-te ti-bya !anbyam.</div><code translate="no">sye h-te ti-bya !anbyam.</code><p>私はAnbyamを話せる。</p></article><article class="grammar-card"><div class="onva-r" translate="no">sye n-h-te ti-te eti-z eti-t-m.</div><code translate="no">sye n-h-te ti-te eti-z eti-t-m.</code><p>今日は行けない。</p></article><article class="grammar-card"><div class="onva-r" translate="no">sye n-!abh n-i-!abh i-z-m.</div><code translate="no">sye n-!abh n-i-!abh i-z-m.</code><p>まだポテトサラダを食べていない。</p></article><article class="grammar-card"><div class="onva-r" translate="no">sye i-u i-z-m.</div><code translate="no">sye i-u i-z-m.</code><p>ポテトサラダを食べているところ。</p></article><article class="grammar-card"><div class="onva-r" translate="no">sye !abh i-p i-z-m.</div><code translate="no">sye !abh i-p i-z-m.</code><p>たった今ポテトサラダを食べた。</p></article><article class="grammar-card"><div class="onva-r" translate="no">sye ne-h-p f-bya eti-z eti-p-m.</div><code translate="no">sye ne-h-p f-bya eti-z eti-p-m.</code><p>昨日、本を買った。</p></article><article class="grammar-card"><div class="onva-r" translate="no">sye te-e te-z z-!anne eti-z eti-e-m.</div><code translate="no">sye te-e te-z z-!anne eti-z eti-e-m.</code><p>明日、学校へ行く。</p></article><article class="grammar-card"><div class="onva-r" translate="no">yu te te-z wo-z?</div><code translate="no">yu te te-z wo-z?</code><p>どこへ行くの？</p></article><article class="grammar-card"><div class="onva-r" translate="no">yu ti eti-z wo-eti?</div><code translate="no">yu ti eti-z wo-eti?</code><p>いつ来るの？</p></article><article class="grammar-card"><div class="onva-r" translate="no">yu n-ti wo-n!ag?</div><code translate="no">yu n-ti wo-n!ag?</code><p>なぜ来ないの？</p></article><article class="grammar-card"><div class="onva-r" translate="no">yu ti wo-ritt?</div><code translate="no">yu ti wo-ritt?</code><p>どうやって来るの？</p></article><article class="grammar-card"><div class="onva-r" translate="no">f-yu t-t f yu-h sye.</div><code translate="no">f-yu t-t f yu-h sye.</code><p>それは私のもの。</p></article><article class="grammar-card"><div class="onva-r" translate="no">sye rep b-!a-r f.</div><code translate="no">sye rep b-!a-r f.</code><p>赤いものが欲しい。</p></article><article class="grammar-card"><div class="onva-r" translate="no">sye h f-bya yu-h yu.</div><code translate="no">sye h f-bya yu-h yu.</code><p>あなたの本を持っている。</p></article><article class="grammar-card"><div class="onva-r" translate="no">h-b wo h-yu f-yu yu-e sye.</div><code translate="no">h-b wo h-yu f-yu yu-e sye.</code><p>それを私に渡してください。</p></article><article class="grammar-card"><div class="onva-r" translate="no">h-b wo r-r bya f-yu.</div><code translate="no">h-b wo r-r bya f-yu.</code><p>それをもう一度言ってください。</p></article><article class="grammar-card"><div class="onva-r" translate="no">wo n-te.</div><code translate="no">wo n-te.</code><p>行かないで。</p></article><article class="grammar-card"><div class="onva-r" translate="no">sye n-!ann-h f-yu.</div><code translate="no">sye n-!ann-h f-yu.</code><p>それが分からない。</p></article><article class="grammar-card"><div class="onva-r" translate="no">sye !ann bya-t won ti-e bya-n.</div><code translate="no">sye !ann bya-t won ti-e bya-n.</code><p>彼が来ると思う。</p></article><article class="grammar-card"><div class="onva-r" translate="no">f-yu t-t f-bya bya-f sye ne-h-p wo-f bya-n.</div><code translate="no">f-yu t-t f-bya bya-f sye ne-h-p wo-f bya-n.</code><p>それは私が買った本です。</p></article><article class="grammar-card"><div class="onva-r" translate="no">m-z t-t g, t-tr sye wor z-e z-h-won.</div><code translate="no">m-z t-t g, t-tr sye wor z-e z-h-won.</code><p>雨が強いから家で寝る。</p></article><article class="grammar-card"><div class="onva-r" translate="no">!abu yu ti, t-tr sye h-yu f-bya yu-e yu.</div><code translate="no">!abu yu ti, t-tr sye h-yu f-bya yu-e yu.</code><p>来てくれたら本を渡す。</p></article><article class="grammar-card"><div class="onva-r" translate="no">sye sye-yu f-sye, n-p won sye-yu f-yu.</div><code translate="no">sye sye-yu f-sye, n-p won sye-yu f-yu.</code><p>私はこれが好きだけど、彼はあれが好き。</p></article><article class="grammar-card"><div class="onva-r" translate="no">sye ne-p won z-e z-!anne.</div><code translate="no">sye ne-p won z-e z-!anne.</code><p>学校で彼を見た。</p></article><article class="grammar-card"><div class="onva-r" translate="no">sye h wo-t h-t byam.</div><code translate="no">sye h wo-t h-t byam.</code><p>私は18文字を持つ。</p></article><article class="grammar-card"><div class="onva-r" translate="no">f-bya ne-ep-p.</div><code translate="no">f-bya ne-ep-p.</code><p>本が見られた。</p></article><article class="grammar-card"><div class="onva-r" translate="no">bya-won yu-h yu t-t wo-f?</div><code translate="no">bya-won yu-h yu t-t wo-f?</code><p>あなたの名前は？</p></article><article class="grammar-card"><div class="onva-r" translate="no">sye!a.</div><code translate="no">sye!a.</code><p>はい。</p></article><article class="grammar-card"><div class="onva-r" translate="no">ni!a.</div><code translate="no">ni!a.</code><p>いいえ。</p></article></div></section>
         <section class="mb-32">
             <h2 class="text-2xl font-bold mb-10 flex items-center gap-3">
                 <span class="w-2 h-8 bg-purple-500 rounded-full"></span>
@@ -524,7 +260,8 @@
         <p class="text-slate-300 text-[10px] font-black tracking-[0.4em] uppercase">onva Royal Linguistic Institute</p>
     </footer>
 
-    <script src="vocabulary.js"></script>
+    <script src="vocabulary.js?v=conversation2"></script>
+    <script src="anbyam.js?v=conversation2"></script>
     <script>
         const byams = [
             { k: "!a", l: "ア゛" }, { k: "e", l: "エ" }, { k: "u", l: "ウ" }, { k: "wo", l: "ヲ" },
@@ -590,7 +327,7 @@
 
             if (typeof window.renderOnva === 'function') { window.renderOnva(); }
         };
-        
+
         let activeVocabTab = 'all';
 
         const renderVocabItem = (v) => {
@@ -614,7 +351,7 @@
 
             const categorySection = document.createElement('div');
             categorySection.className = 'bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300';
-            
+
             let colorClass = 'text-blue-500';
             const colors = {
                 grammar: 'text-indigo-500',
@@ -631,10 +368,10 @@
             colorClass = colors[catName] || colorClass;
 
             categorySection.innerHTML = `<h3 class="${colorClass} font-black text-[10px] uppercase tracking-widest mb-6">${catName}</h3>`;
-            
+
             const list = document.createElement('div');
             list.className = 'space-y-4';
-            
+
             filteredData.forEach(v => {
                 const item = document.createElement('div');
                 item.className = 'vocab-item py-3 flex justify-between items-center gap-4 border-b border-slate-50 last:border-0';
@@ -651,7 +388,7 @@
             display.innerHTML = '';
 
             const categories = Object.keys(vocabulary);
-            
+
             if (!filter && activeVocabTab !== 'all') {
                 // Specific Category Grid Mode
                 display.className = 'grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4';
@@ -696,53 +433,20 @@
         const analyzerResult = document.getElementById('analyzer-result');
 
         analyzeInput.addEventListener('input', (e) => {
-            const text = e.target.value.trim();
-            if (!text) {
-                analyzerResult.innerHTML = '<p class="text-slate-300 text-sm italic">解析された文字がここに表示されます</p>';
-                return;
-            }
-
-            // 辞書と全文字を統合して長い順にソート（最長一致）
-            const searchTerms = [];
-            Object.keys(vocabulary).forEach(cat => {
-                vocabulary[cat].forEach(v => {
-                    searchTerms.push({ k: v.k, m: v.m, type: 'dictionary' });
-                });
-            });
-            byams.forEach(b => {
-                searchTerms.push({ k: b.k, m: b.l, type: 'char' });
-            });
-            searchTerms.sort((a, b) => b.k.length - a.k.length);
-
-            analyzerResult.innerHTML = '';
-            let currentIdx = 0;
-            const words = text.split(/\s+/); // スペース区切りも考慮
-
-            words.forEach(word => {
-                let wordIdx = 0;
-                while (wordIdx < word.length) {
-                    let matched = false;
-                    for (let term of searchTerms) {
-                        if (word.startsWith(term.k, wordIdx)) {
-                            const card = document.createElement('div');
-                            const colorClass = term.type === 'char' ? 'text-slate-400' : 'text-indigo-600';
-                            card.className = 'bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center min-w-[100px] animate-in fade-in zoom-in duration-300';
-                            card.innerHTML = `
-                                <div class="onva text-2xl mb-2">${term.k}</div>
-                                <div class="text-[11px] font-bold ${colorClass} mb-1">${term.m}</div>
-                                <div class="text-[8px] font-mono text-slate-300">${term.k}</div>
-                            `;
-                            analyzerResult.appendChild(card);
-                            wordIdx += term.k.length;
-                            matched = true;
-                            break;
-                        }
-                    }
-                    if (!matched) wordIdx++;
+            analyzerResult.replaceChildren();
+            ANBYAM.tokenize(e.target.value).forEach(token => {
+                const card = document.createElement('div');
+                card.className = 'grammar-card';
+                const spelling = document.createElement('code'); spelling.textContent = token.raw;
+                const gloss = document.createElement('p'); gloss.textContent = token.meaning;
+                card.append(spelling, gloss);
+                if (token.parts) {
+                    const parts = document.createElement('p');
+                    parts.textContent = token.parts.map(p => p.raw + ' = ' + p.meaning).join(' / ');
+                    card.append(parts);
                 }
+                analyzerResult.append(card);
             });
-
-            if (typeof window.renderOnva === 'function') { window.renderOnva(); }
         });
 
         // --- Converter Logic ---
@@ -805,7 +509,7 @@
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             let currentX = padding;
-            
+
             try {
                 const btnHTML = downloadBtn.innerHTML;
                 downloadBtn.innerHTML = '<span class="flex items-center gap-2">⏳ 処理中...</span>';
@@ -818,7 +522,7 @@
                         for (const domImg of imgs) {
                             const src = domImg.src;
                             const res = await fetch(src, { mode: 'cors' });
-                            
+
                             let url;
                             if (src.endsWith('.svg')) {
                                 const svgText = await res.text();
@@ -827,7 +531,7 @@
                                 const blob = await res.blob();
                                 url = URL.createObjectURL(blob);
                             }
-                            
+
                             await new Promise((imgResolve, imgReject) => {
                                 const tempImg = new Image();
                                 tempImg.onload = () => {
@@ -859,8 +563,8 @@
                 const item = new ClipboardItem({ 'image/png': blobPromise });
                 navigator.clipboard.write([item]).then(() => {
                     downloadBtn.innerHTML = '<span class="flex items-center gap-2">✓ コピーしました！</span>';
-                    setTimeout(() => { 
-                        downloadBtn.innerHTML = btnHTML; 
+                    setTimeout(() => {
+                        downloadBtn.innerHTML = btnHTML;
                         downloadBtn.disabled = false;
                     }, 2000);
                 }).catch((e) => {
@@ -869,7 +573,7 @@
                     downloadBtn.innerHTML = btnHTML;
                     downloadBtn.disabled = false;
                 });
-                
+
             } catch (e) {
                 console.error('Canvas export error (likely CORS):', e);
                 alert('画像の取得制限があるため、コピーできませんでした。');
@@ -885,13 +589,13 @@
 
         const numWords = {
             0: "n-!a", 1: "t-i", 2: "p-u", 3: "r-e", 4: "z-h", 5: "m-!a",
-            6: "ge-t", 7: "yu-i", 8: "h-t", 9: "n-wo", 10: "wo-t",
+            6: "f-t", 7: "yu-i", 8: "h-t", 9: "n-wo", 10: "wo-t",
             100: "t-wo", 1000: "wo-t!a"
         };
 
         const convertNumberToOnva = (num) => {
             if (num === 0) return numWords[0];
-            
+
             let result = [];
             let n = num;
 
@@ -931,12 +635,13 @@
             numResultArea.classList.remove('hidden');
             numOnvaAlpha.textContent = alpha;
             numOnvaChars.textContent = alpha;
-            
+
             delete numOnvaChars.dataset.processed;
             if (window.renderOnva) window.renderOnva();
         });
 
     </script>
+<script defer src="i18n.js?v=conversation2" data-site="onva-learning" data-languages="ja,en"></script>
 </body>
 
 </html>

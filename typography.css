@@ -1,0 +1,37 @@
+/* Text and byam are separate scripts: the display font never replaces Japanese. */
+:root { --onva-text: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', system-ui, sans-serif; --onva-code: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; }
+body { font-family:var(--onva-text); line-height:1.75; font-synthesis:none; text-rendering:optimizeLegibility; }
+button, input, textarea, select { font:inherit; }
+p { overflow-wrap:anywhere; }
+code, pre, .font-mono, .anbyam-latin { font-family:var(--onva-code); text-transform:none; letter-spacing:normal; overflow-wrap:anywhere; }
+.onva, .onva-r, .onva-i, .onva-ri { line-height:1.65; max-width:100%; text-transform:none; letter-spacing:normal; }
+.onva-container { display:inline-flex; flex-direction:column; align-items:center; max-width:100%; vertical-align:middle; line-height:1.5; }
+.onva-images { display:inline-flex !important; align-items:baseline !important; justify-content:inherit; flex-wrap:wrap; gap:0 !important; max-width:100%; line-height:1.5; }
+.onva-word { display:inline-flex; align-items:center; flex-wrap:wrap; max-width:100%; }
+.onva-images img.byam-glyph { display:inline-block; height:1em !important; width:auto !important; max-width:none; max-height:none; margin:0 .035em; object-fit:contain; flex-shrink:0; vertical-align:middle; }
+.onva-images img.byam-hyphen { height:.65em !important; width:.45em !important; }
+.onva-space { white-space:pre; min-width:.45em; }
+.onva-literal { font-family:var(--onva-code); white-space:pre-wrap; }
+.onva-label { font-family:var(--onva-text); font-size:.6em; font-weight:400; line-height:1.6; color:inherit; opacity:.75; margin-top:.3em; overflow-wrap:anywhere; }
+.grammar-guide { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1.25rem; }
+.grammar-guide>h2 { grid-column:1/-1; font-size:1.6rem; font-weight:700; }
+.grammar-card { min-width:0; padding:1.5rem; border:1px solid #e2e8f0; border-radius:1.25rem; background:white; }
+.grammar-card h3 { font-weight:700; font-size:1.05rem; margin-bottom:.75rem; }
+.grammar-card p { color:#475569; font-size:.95rem; line-height:1.9; margin:.5rem 0 1rem; }
+.grammar-example { display:flex; flex-direction:column; align-items:flex-start; gap:.5rem; border-top:1px solid #f1f5f9; padding-top:1rem; margin-top:1rem; }
+.grammar-example>.onva-r, .conversation-grid .onva-r { font-size:1.5rem; }
+.grammar-example>code, .conversation-grid code { display:block; font-size:.85rem; color:#334155; margin:.5rem 0; }
+.grammar-example>span:last-child { font-size:.9rem; color:#475569; }
+.conversation-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; }
+#token-display { align-items:stretch; }
+#detail-table>div { flex-wrap:wrap; }
+#question-symbol, #question-text { height:auto; min-height:3rem; }
+@media screen and (max-width:767px) {
+ .grammar-guide, .conversation-grid { grid-template-columns:1fr; }
+ nav>div { height:auto !important; min-height:4rem; padding-block:.75rem; flex-wrap:wrap; gap:.75rem; }
+ nav>div>div { flex-wrap:wrap; gap:.75rem !important; }
+ main { padding-top:10rem !important; }
+ .grammar-card { padding:1.1rem; }
+}
+@media print { .grammar-card { break-inside:avoid; } nav, .site-language { display:none !important; } }
+#conversation-grammar { scroll-margin-top:6rem; }
