@@ -64,20 +64,30 @@
             overflow: hidden;
         }
     </style>
+<style>
+.onva-nav-actions { min-width:0; }
+.onva-nav-links { min-width:0; overflow-x:auto; white-space:nowrap; }
+#lang-toggle { flex-shrink:0; }
+@media(max-width:640px) {
+ .onva-navigation { height:auto; min-height:4rem; flex-wrap:wrap; gap:.5rem; padding-top:.75rem; padding-bottom:.75rem; }
+ .onva-nav-actions { flex-basis:100%; justify-content:space-between; gap:1rem; }
+ .onva-nav-links { flex:1; }
+}
+</style>
 </head>
 
 <body>
 
     <!-- Navigation -->
     <nav class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-lg border-b border-slate-100">
-        <div class="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
+        <div class="onva-navigation max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
             <div class="flex items-center gap-4">
                 <img src="image.png" alt="onva National Flag" class="h-8 w-auto rounded-sm shadow-sm">
                 <span class="onva text-2xl font-bold text-slate-900">!anbya</span>
                 <span class="text-[10px] tracking-[0.3em] font-black text-slate-400">EST. 1928</span>
             </div>
-            <div class="flex items-center gap-6">
-                <div class="flex gap-4 text-[11px] font-bold tracking-widest text-slate-500 uppercase">
+            <div class="onva-nav-actions flex items-center gap-6">
+                <div class="onva-nav-links flex gap-4 text-[11px] font-bold tracking-widest text-slate-500 uppercase">
                     <a href="index.html" class="nav-item text-blue-600 border-b-2 border-blue-600 pb-1"
                         data-key="nav-kingdom">Kingdom</a>
                     <a href="anvum.html" class="nav-item hover:text-slate-900 transition"
@@ -219,7 +229,7 @@
             const elements = document.querySelectorAll('[data-key]');
             elements.forEach(el => {
                 const key = el.getAttribute('data-key');
-                const translation = translations[currentLang][key];
+                const translation = (translations[currentLang] || translations.ja)[key];
 
                 // Reset processing status for byam.js
                 delete el.dataset.processed;
@@ -243,7 +253,7 @@
             });
 
             // Toggle button text
-            document.getElementById('lang-current').textContent = currentLang === 'ja' ? 'JP' : '!A';
+            document.getElementById('lang-current').textContent = ({ja:'JP',en:'EN',onva:'!A'})[currentLang];
 
             // Re-render byam icons
             setTimeout(() => {
@@ -251,9 +261,16 @@
             }, 10);
         }
 
-        document.getElementById('lang-toggle').addEventListener('click', () => {
-            currentLang = currentLang === 'ja' ? 'onva' : 'ja';
+        window.setOnvaLanguage = function (language) {
+            currentLang = language;
             updateLanguage();
+        };
+        document.getElementById('lang-toggle').setAttribute('aria-label', '言語切り替え / Switch language: 日本語 → English → !anbyam');
+        document.getElementById('lang-toggle').addEventListener('click', () => {
+            const choices = ['ja', 'en', 'onva'];
+            const next = choices[(choices.indexOf(currentLang) + 1) % choices.length];
+            if (window.EC_I18N) window.EC_I18N.setLanguage(next);
+            else window.setOnvaLanguage(next);
         });
 
         // Initialize with data keys
@@ -269,7 +286,7 @@
         document.querySelectorAll('main p')[1].setAttribute('data-key', 'figure-desc');
     </script>
 
-<script defer src="i18n.js?v=20261102-1" data-site="onva" data-ja="東暦1928年に成立した最適化国家。18文字の !anbyam を核に、合理主義で社会と文化を再設計した世界です。" data-en="onva is a kingdom founded in East Calendar 1928. Its society and culture pursue rational design and optimization."></script>
+<script defer src="i18n.js?v=20261102-ui2" data-site="onva" data-languages="ja,en,onva" data-ja="東暦1928年に成立した最適化国家。18文字の !anbyam を核に、合理主義で社会と文化を再設計した世界です。" data-en="onva is a kingdom founded in East Calendar 1928. Its society and culture pursue rational design and optimization."></script>
 </body>
 
 </html>
